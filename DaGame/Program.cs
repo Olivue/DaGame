@@ -38,11 +38,11 @@ namespace DaGame
 
         static void Fight()
         {
-            enemy Enemy1 = new enemy();
-            Enemy1.ChooseEnemy();
+            //enemy Enemy1 = new enemy();
+            enemy.ChooseEnemy();
             Console.WriteLine("нажми на кнопочку для действия");
             Console.WriteLine("[атака - q] [статус - w] [бегство - e]");
-            while (Enemy1.enemyHP > 0 & Hero.HP > 0)
+            while (enemy.enemyHP > 0 & Hero.HP > 0)
             {
                 Console.WriteLine("");
                 char input = Console.ReadKey(true).KeyChar;
@@ -50,13 +50,13 @@ namespace DaGame
                 {
                     Console.WriteLine("пищ пищ пуу");
                     int attack = Hero.Attack - random.Next(4);
-                    Enemy1.enemyHP -= attack;
-                    Console.WriteLine(Hero.Name + " наносит врагу " + Enemy1.enemyName + " " + attack + " урона");
+                    enemy.enemyHP -= attack;
+                    Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemyName + " " + attack + " урона");
 
-                    if (Enemy1.enemyHP > 0)
+                    if (enemy.enemyHP > 0)
                     {
-                        Console.WriteLine(Enemy1.enemyName + " атакует тебя в ответ");
-                        int EnemyAtack = Enemy1.EnemyAttack(Enemy1.enemyName);
+                        Console.WriteLine(enemy.enemyName + " атакует тебя в ответ");
+                        int EnemyAtack = enemy.EnemyAttack(enemy.enemyName);
                         if (EnemyAtack == 0)
                         {
                             Console.WriteLine("упсеее вражина промахнулсии");
@@ -64,20 +64,21 @@ namespace DaGame
                         else
                         {
                             Hero.HP -= EnemyAtack;
-                            Console.WriteLine("Вражина нанес тебе " + Enemy1.enemyAttack + " урона");
+                            Console.WriteLine("Вражина нанес тебе " + enemy.enemyAttack + " урона");
                         }
                     }
                 }
                 else if (input == 'w' || input == 'ц')
                 {
-                    Console.WriteLine(Enemy1.enemyName + " все еще существует с " + Enemy1.enemyHP + " хепе");
+                    Console.WriteLine(enemy.enemyName + " все еще существует с " + enemy.enemyHP + " хепе");
                     Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе");
                 }
                 else if (input == 'e' || input == 'у')
                 {
                     Console.WriteLine("сбежал как лошара");
                     return;
-                }                
+                }
+                
             }
             if (Hero.HP <= 0)
             {
@@ -88,8 +89,8 @@ namespace DaGame
             else
             {
                 Console.WriteLine("победа получается");
-                Console.WriteLine("За эту битву ты получаешь " + Enemy1.enemyExp + " опыта");
-                Hero.Exp += Enemy1.enemyExp;
+                Console.WriteLine("За эту битву ты получаешь " + enemy.enemyExp + " опыта");
+                Hero.Exp += enemy.enemyExp;
                 Console.WriteLine("Теперь у тебя " + Hero.Exp + " опыта");
                 Console.WriteLine("");
             }
