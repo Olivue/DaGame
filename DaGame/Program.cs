@@ -57,7 +57,8 @@ namespace DaGame
                     {
                         Console.WriteLine(enemy.enemyName + " атакует тебя в ответ");
                         int EnemyAtack = enemy.EnemyAttack(enemy.enemyName);
-                        if (EnemyAtack == 0)
+                        bool evasion = Hero.Evasion();
+                        if (evasion == true)
                         {
                             Console.WriteLine("упсеее вражина промахнулсии");
                         }

@@ -8,11 +8,16 @@ namespace DaGame
 {
     internal class Hero
     {
+        static Random random = new Random();
+
         public static string Name;
         public static int MaxHP = 50;
         public static int HP = 50;
         public static int Attack = 5;
         public static int Exp;
+        public static double HeroEvasion = 0.15;
+
+        public static List<string> Inventory = new List<string>();
 
         public static void LevelUp()
         {
@@ -24,6 +29,13 @@ namespace DaGame
             Console.WriteLine("Твое здоровье восстановленно!");
             Console.WriteLine("");
             HP = MaxHP;
+        }
+
+        public static bool Evasion()
+        {
+            double evasion = random.NextDouble();
+            if (evasion <= HeroEvasion) return true;
+            else return false;
         }
     }
 }

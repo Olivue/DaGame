@@ -42,7 +42,7 @@ namespace DaGame
             double chance = random.NextDouble();
             if (enemy1.Contains(name))
             {
-                enemyAttack = random.Next(4);
+                enemyAttack = random.Next(1,4);
                 return enemyAttack;
             }
             else if (enemy2.Contains(name))
@@ -54,7 +54,7 @@ namespace DaGame
                 }
                 else
                 {
-                    enemyAttack = random.Next(7);
+                    enemyAttack = random.Next(1,7);
                 }
                 return enemyAttack;
             }
