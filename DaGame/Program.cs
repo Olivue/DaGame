@@ -11,6 +11,7 @@ namespace DaGame
     {
 
         static Random random = new Random();
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -22,7 +23,11 @@ namespace DaGame
             Hero.Name = name;
             Console.WriteLine("тебя значица зовут " + Hero.Name);
             Console.WriteLine("вот и твоя первая вражина!");
+            Console.WriteLine("");
             Fight();
+            Items.ChooseItem("potions");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("items");
             Fight();
             Fight();
             Fight();
@@ -38,10 +43,12 @@ namespace DaGame
 
         static void Fight()
         {
+            List<enemy> enemies = new List<enemy>();
+            
             //enemy Enemy1 = new enemy();
             enemy.ChooseEnemy();
             Console.WriteLine("нажми на кнопочку для действия");
-            Console.WriteLine("[атака - q] [статус - w] [бегство - e]");
+            Console.WriteLine("[атака - q] [статус - w] [чекнуть инвентарь - e]");
             while (enemy.enemyHP > 0 & Hero.HP > 0)
             {
                 Console.WriteLine("");
@@ -76,8 +83,7 @@ namespace DaGame
                 }
                 else if (input == 'e' || input == 'у')
                 {
-                    Console.WriteLine("сбежал как лошара");
-                    return;
+                    Hero.CheckInventory();
                 }
                 
             }

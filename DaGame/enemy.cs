@@ -18,6 +18,8 @@ namespace DaGame
         static public int enemyExp;
 
 
+
+
         static public void ChooseEnemy()
         {
             if (Hero.MaxHP < 51)
@@ -30,7 +32,7 @@ namespace DaGame
             else if (Hero.MaxHP > 50)
             {
                 enemyName = enemy2[random.Next(enemy2.Length)];
-                enemyHP = random.Next(10, 20);
+                enemyHP = random.Next(15, 26);
                 enemyExp = 10;
             }
             Console.WriteLine("твоя вражина это " + enemyName);

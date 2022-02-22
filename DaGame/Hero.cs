@@ -16,8 +16,10 @@ namespace DaGame
         public static int Attack = 5;
         public static int Exp;
         public static double HeroEvasion = 0.15;
+        public static double HeroCrit = 0.1;
 
         public static List<string> Inventory = new List<string>();
+        public static List<string> Equip = new List<string>();
 
         public static void LevelUp()
         {
@@ -36,6 +38,31 @@ namespace DaGame
             double evasion = random.NextDouble();
             if (evasion <= HeroEvasion) return true;
             else return false;
+        }
+
+        public static void CheckInventory()
+        {
+            Console.WriteLine("В инвентаре сейчас следующие предметы:");
+            int i = 1;
+            foreach (string item in Inventory)
+            {
+                Console.WriteLine(i + " " + item);
+                i++;
+            }
+            Console.WriteLine("");
+            Console.WriteLine("Для использования предмета введите его номер, для выхода из инвентаря нажмите Enter");
+            string number = Console.ReadLine();
+
+            if (number == "") return;
+            if (int.TryParse(number, out int numumber))
+            {
+                if (numumber <= Hero.Inventory.Count)
+                {
+                    Items.UseItem(Hero.Inventory[numumber-1]);
+                }
+            }
+            else Console.WriteLine("Введи номер предмета или Enter для закрытия инвентаря");
+
         }
     }
 }
