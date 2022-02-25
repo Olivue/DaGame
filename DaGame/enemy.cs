@@ -20,7 +20,7 @@ namespace DaGame
 
 
 
-        static public void ChooseEnemy()
+        static public void ChooseEnemy(int number, int level)
         {
             if (Hero.MaxHP < 51)
             {

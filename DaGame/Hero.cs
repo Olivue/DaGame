@@ -20,6 +20,7 @@ namespace DaGame
 
         public static List<string> Inventory = new List<string>();
         public static List<string> Equip = new List<string>();
+        public static List<Items> Equipment = new List<Items>();
 
         public static void LevelUp()
         {
@@ -50,6 +51,12 @@ namespace DaGame
                 i++;
             }
             Console.WriteLine("");
+            Console.WriteLine("На тебе надеты следующие предметы:");
+            foreach (Items item in Equipment)
+            {
+                Console.WriteLine(i + " " + item);
+                i++;
+            }
             Console.WriteLine("Для использования предмета введите его номер, для выхода из инвентаря нажмите Enter");
             string number = Console.ReadLine();
 

@@ -28,6 +28,10 @@ namespace DaGame
             Items.ChooseItem("potions");
             Items.ChooseItem("bombs");
             Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
             Fight();
             Fight();
             Fight();

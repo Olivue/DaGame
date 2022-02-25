@@ -13,9 +13,18 @@ namespace DaGame
         static string[] potions = { "Зелье лечения", "Сильное зелье лечения"};
         static string[] bombs = { "Бомба", "Ядовитая бомба", "Оглушающая бомба"};
         static string[] items = { "Серьги", "Чётки", "Амулет"};
-        ///static string[] properties = { "уворот", "хп", "атака", "крит"};
+        static string[] properties = { "уворота", "здоровья", "атаки", "критического урона", "жизни"};
+
+        string ItemName;
+        string ItemProp;
+        double ItemValue;
+        static int checker;
+        static int counter;
+        static int member;
 
         static public string ChosenItem;
+        static public string ChosenAttribute;
+        static public double AttributeValue;
 
         static public void ChooseItem(string ItemType)
         {
@@ -35,18 +44,54 @@ namespace DaGame
             else if (ItemType == "items")
             {
                 ChosenItem = items[random.Next(items.Length)];
-                Hero.Inventory.Add(ChosenItem);
-                Console.WriteLine(ChosenItem + " теперь в инвентаре");
-                if (ChosenItem == "Серьги")
+                ChooseAtribute();
+                Console.WriteLine("Тебе попался " + ChosenItem);             
+
+                if (Hero.Equipment.Count == 0)
                 {
-                    Console.WriteLine(ChosenItem + " я хз накинь серге");
+                    Console.WriteLine("Предмета такого типа нет в инвентаре, " + Hero.Name + " надевает его на себя");
+                    Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                    Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето");
                 }
-                else if (ChosenItem == "Чётки")
+                else
                 {
-                    Console.WriteLine(ChosenItem + " чотки чочотки");
+                    counter = 0;
+                    checker = 0;
+                    foreach (Items items in Hero.Equipment)
+                    {
+                        counter++;
+                        Console.WriteLine("проверка предмета " + items.ItemName);
+                        if (items.ItemName == ChosenItem)
+                        {
+                            checker++;
+                            member = counter;
+                        }
+                    }
+                    if(checker == 1)
+                    {
+                        Console.WriteLine(Hero.Equipment[member - 1].ItemName + " уже есть в инвентаре");
+                        Console.WriteLine(Hero.Equipment[member - 1].ItemName + " " + Hero.Equipment[member - 1].ItemProp + " " + Hero.Equipment[member - 1].ItemValue + " - надето");
+                        Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - можете надеть");
+                        Console.WriteLine("Если хочешь сменить предмет - нажми [q], если хочешь оставить предыдущий - нажми [e]");
+                        char input = Console.ReadKey(true).KeyChar;
+                        if (input == 'q' || input == 'й')
+                        {
+                            Hero.Equipment.Remove(new Items() { ItemName = ChosenItem });
+                            Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                            Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето, прежнее снаряжение выброшено");
+                        }
+                        else if (input == 'e' || input == 'у')
+                        {
+                            Console.WriteLine(Hero.Equipment[member - 1].ItemName + " " + Hero.Equipment[member - 1].ItemProp + " " + Hero.Equipment[member - 1].ItemValue + " - все еще надето, другой предмет выброшен");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Предмета такого типа нет в инвентаре, " + Hero.Name + " надевает его на себя");
+                        Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                        Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето");
+                    }
                 }
-                else Console.WriteLine(ChosenItem + " на шейку");
-                
                 Console.WriteLine("");
             }
             else if (ItemType == "bombs")
@@ -65,6 +110,32 @@ namespace DaGame
                 else Console.WriteLine(ChosenItem + " оглушает выбранного врага на 3 хода");
 
                 Console.WriteLine("");
+            }
+        }
+
+        static void ChooseAtribute()
+        {
+            ChosenAttribute = properties[random.Next(properties.Length)];
+
+            if (ChosenAttribute == "уворота")
+            {
+                AttributeValue = random.Next(10, 41) / 100D;
+            }
+            else if (ChosenAttribute == "здоровья")
+            {
+                AttributeValue = random.Next(3, 13);
+            }
+            else if (ChosenAttribute == "атаки")
+            {
+                AttributeValue = random.Next(1, 9);
+            }
+            else if (ChosenAttribute == "критического урона")
+            {
+                AttributeValue = random.Next(5, 21) / 100D;
+            }
+            else if (ChosenAttribute == "жизни")
+            {
+                AttributeValue = 1;
             }
         }
 
@@ -106,7 +177,5 @@ namespace DaGame
                 Console.WriteLine(Hero.Name + ", оглушаяющая бомба удалена из инвентаря");
             }
         }
-
-
     }
 }
