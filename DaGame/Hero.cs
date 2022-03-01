@@ -17,6 +17,9 @@ namespace DaGame
         public static int Exp;
         public static double HeroEvasion = 0.15;
         public static double HeroCrit = 0.1;
+        static double Riser;
+        public static bool secondAttMarker;
+        public static bool thirdAttMarker;
 
         public static List<string> Inventory = new List<string>();
         public static List<string> Equip = new List<string>();
@@ -34,15 +37,29 @@ namespace DaGame
             HP = MaxHP;
         }
 
-        public static bool Evasion()
+        public static bool Evasion() ///gotovo
         {
             double evasion = random.NextDouble();
-            if (evasion <= HeroEvasion) return true;
+            Riser = 0;
+
+            foreach(Items item in Equipment)
+            {
+                if (item.ItemProp == "уворота")
+                {
+                    Riser += item.ItemValue;
+                }
+            }
+            if (evasion <= HeroEvasion + Riser) return true;
             else return false;
         }
 
-        public static void CheckInventory()
+        public static void CheckInventory() 
         {
+            if (!Inventory.Any()) 
+            {
+                Console.WriteLine("В инвентаре сейчас ничего нет");
+                return;
+            } 
             Console.WriteLine("В инвентаре сейчас следующие предметы:");
             int i = 1;
             foreach (string item in Inventory)
@@ -70,6 +87,50 @@ namespace DaGame
             }
             else Console.WriteLine("Введи номер предмета или Enter для закрытия инвентаря");
 
+        }
+
+        public static int HeroAttack()
+        {
+            int att = 0;
+            if (Program.SecondAttack || Program.ThirdAttack) 
+            {
+                Console.WriteLine("Выбери тип атаки:");
+                if (Program.SecondAttack)
+                {
+                    Console.Write("обычная атака - [q] атака по площади - [w]");
+                }
+                if(Program.ThirdAttack)
+                {
+                    Console.WriteLine(" сильная атака - [e]");
+                }
+
+                Console.WriteLine("");
+                char input = Console.ReadKey(true).KeyChar;
+                if (input == 'q' || input == 'й')
+                {
+                    Console.WriteLine("пищ пищ пуу");
+                    att = Attack - random.Next(4);
+                }
+                else if (input == 'w' || input == 'ц')
+                {
+                    Console.WriteLine("баба хххх");
+                    secondAttMarker = true;
+                    att = Attack - random.Next(3,6);
+                }
+                else if ((input == 'e' || input == 'у') & Program.ThirdAttack)
+                {
+                    Console.WriteLine("пдыыыщщщ");
+                    thirdAttMarker = true;
+                    att = Attack + random.Next(3,6);
+                }
+            }
+            else
+            {
+                Console.WriteLine("пищ пищ пуу");
+                att = Attack - random.Next(4);                
+            }
+            Console.WriteLine("");
+            return att;
         }
     }
 }

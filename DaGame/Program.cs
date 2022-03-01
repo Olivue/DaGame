@@ -11,14 +11,13 @@ namespace DaGame
     {
 
         static Random random = new Random();
-        
+        public static bool SecondAttack = true;
+        public static bool ThirdAttack = true;
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-
-            bool SecondAttac = false;
-            bool ThirdAttac = false;
 
             Console.WriteLine("имя введи");
             string name = Console.ReadLine();
@@ -88,40 +87,113 @@ namespace DaGame
             Console.WriteLine(Hero.Name + " столкнулся с:");
             foreach (enemy enemumy in enemy.enemies)
             {
-                Console.WriteLine(enemumy.Name + " с " + enemumy.HP + " очками здоровья");
+                Console.WriteLine(enemumy.Name + " с " + enemumy.HP + " здоровья");
             }
             Console.WriteLine("нажми на кнопочку для действия");
-            Console.WriteLine("[атака - q] [статус - w] [чекнуть инвентарь - e]");
             while (enemy.enemyHP > 0 & Hero.HP > 0)
             {
                 Console.WriteLine("");
+                Console.WriteLine("[атака - q] [статус - w] [чекнуть инвентарь - e]");
                 char input = Console.ReadKey(true).KeyChar;
                 if (input == 'q' || input == 'й')
                 {
-                    Console.WriteLine("пищ пищ пуу");
-                    int attack = Hero.Attack - random.Next(4);
-                    enemy.enemyHP -= attack;
-                    Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemyName + " " + attack + " урона");
+                    int attack = Hero.HeroAttack();
 
-                    if (enemy.enemyHP > 0)
+                    if (Hero.secondAttMarker)
                     {
-                        Console.WriteLine(enemy.enemyName + " атакует тебя в ответ");
-                        int EnemyAtack = enemy.EnemyAttack(enemy.enemyName);
-                        bool evasion = Hero.Evasion();
-                        if (evasion == true)
+                        foreach (enemy enemy in enemy.enemies)
                         {
-                            Console.WriteLine("упсеее вражина промахнулсии");
+                            enemy.HP =- attack;
+                        }
+                        Console.WriteLine("Всем врагам нанесено " + attack + " урона");
+                        Hero.secondAttMarker = false;
+                    }
+                    else
+                    {
+                        if(enemy.enemies.Count == 1)
+                        {
+                            enemy.enemies[0].HP -= attack;
+                            Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[0].Name + " " + attack + " урона");
                         }
                         else
                         {
-                            Hero.HP -= EnemyAtack;
-                            Console.WriteLine("Вражина нанес тебе " + enemy.enemyAttack + " урона");
+                            Console.WriteLine("Выберите врага для атаки:");
+                            int i = 1;
+                            foreach (enemy enemy in enemy.enemies)
+                            {
+                                Console.WriteLine(i + " " + enemy.Name + " (" + enemy.HP + " здоровья)");
+                                i++;
+                            }
+                            Console.WriteLine("");
+                            Console.WriteLine("Для атаки выбранного врага введите его номер:");
+                            string number = Console.ReadLine();
+                            if (number == "") return;
+                            if (int.TryParse(number, out int numumber))
+                            {
+                                if (numumber <= enemy.enemies.Count)
+                                {
+                                    if (Hero.thirdAttMarker)
+                                    {
+                                        double chance = random.NextDouble();
+                                        if (chance > 0.5)
+                                        {
+                                            enemy.enemies[numumber - 1].HP -= attack/2;
+                                            Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber - 1].Name + " " + attack + " урона");
+                                        }
+                                        else
+                                        {
+                                            enemy.enemies[numumber - 1].HP -= attack;
+                                            Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber - 1].Name + " " + attack + " урона");
+                                        }
+                                        Hero.thirdAttMarker = false;
+                                    }
+                                    else
+                                    {
+                                        enemy.enemies[numumber - 1].HP -= attack;
+                                        Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber - 1].Name + " " + attack + " урона");
+                                    }
+                                }
+                            }
                         }
                     }
+                    List<int> count = new List<int>();
+                    int e;
+                    foreach (enemy enemumy in enemy.enemies) /// переписать под нынешние реалии
+                    {
+                        if (enemumy.HP > 0) /// тоже доделать!!!!!
+                        {
+                            Console.WriteLine(enemy.enemyName + " атакует тебя в ответ");
+                            int EnemyAtack = enemy.EnemyAttack(enemy.enemyName);
+                            if (Hero.Evasion())
+                            {
+                                Console.WriteLine("упсеее вражина промахнулсии");
+                            }
+                            else
+                            {
+                                Hero.HP -= EnemyAtack;
+                                Console.WriteLine("Вражина нанес тебе " + enemy.enemyAttack + " урона");
+                            }
+                        }
+                        else
+                        {
+                            e = enemy.enemies.IndexOf(enemumy);
+                            count.Add(e);
+                        }
+                    }
+                    count.Reverse();
+                    foreach(int i in count)
+                    {
+                        Console.WriteLine(enemy.enemies[i].Name + " умирает");
+                        enemy.enemies.RemoveAt(i);
+                    }
+
                 }
                 else if (input == 'w' || input == 'ц')
                 {
-                    Console.WriteLine(enemy.enemyName + " все еще существует с " + enemy.enemyHP + " хепе");
+                    foreach (enemy enemumy in enemy.enemies)
+                    {
+                        Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
+                    }
                     Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе");
                 }
                 else if (input == 'e' || input == 'у')
@@ -136,11 +208,10 @@ namespace DaGame
                 Console.WriteLine("");
                 Console.WriteLine("> > > ИГРА ОКОНЧЕНА < < <");
             }
-            else
+            else /// добавить систему прибавки опыта
             {
                 Console.WriteLine("победа получается");
-                Console.WriteLine("За эту битву ты получаешь " + enemy.enemyExp + " опыта");
-                Hero.Exp += enemy.enemyExp;
+                Console.WriteLine("За эту битву ты получаешь " + 1 + " опыта");
                 Console.WriteLine("Теперь у тебя " + Hero.Exp + " опыта");
                 Console.WriteLine("");
             }

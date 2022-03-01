@@ -16,8 +16,8 @@ namespace DaGame
         static string[] properties = { "уворота", "здоровья", "атаки", "критического урона", "жизни"};
 
         string ItemName;
-        string ItemProp;
-        double ItemValue;
+        public string ItemProp;
+        public double ItemValue;
         static int checker;
         static int counter;
         static int member;
