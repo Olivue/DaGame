@@ -15,7 +15,7 @@ namespace DaGame
         public static int HP = 50;
         public static int Attack = 5;
         public static int Exp;
-        public static double HeroEvasion = 0.15;
+        public static double HeroEvasion = 0.2;
         public static double HeroCrit = 0.1;
         static double Riser;
         public static bool secondAttMarker;
@@ -53,7 +53,7 @@ namespace DaGame
             else return false;
         }
 
-        public static void CheckInventory() 
+        public static void CheckInventory() /// gotovo
         {
             if (!Inventory.Any()) 
             {
@@ -71,8 +71,7 @@ namespace DaGame
             Console.WriteLine("На тебе надеты следующие предметы:");
             foreach (Items item in Equipment)
             {
-                Console.WriteLine(i + " " + item);
-                i++;
+                Console.WriteLine(item.ItemName + " " + item.ItemProp);
             }
             Console.WriteLine("Для использования предмета введите его номер, для выхода из инвентаря нажмите Enter");
             string number = Console.ReadLine();
@@ -80,13 +79,12 @@ namespace DaGame
             if (number == "") return;
             if (int.TryParse(number, out int numumber))
             {
-                if (numumber <= Hero.Inventory.Count)
+                if (numumber <= Inventory.Count)
                 {
-                    Items.UseItem(Hero.Inventory[numumber-1]);
+                    Items.UseItem(Inventory[numumber-1]);
                 }
             }
-            else Console.WriteLine("Введи номер предмета или Enter для закрытия инвентаря");
-
+            else Console.WriteLine("Ну значит ничего");
         }
 
         public static int HeroAttack()
@@ -131,6 +129,10 @@ namespace DaGame
             }
             Console.WriteLine("");
             return att;
+        }
+        public static void BuffCheck()
+        {
+
         }
     }
 }

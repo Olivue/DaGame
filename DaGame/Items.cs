@@ -15,7 +15,7 @@ namespace DaGame
         static string[] items = { "Серьги", "Чётки", "Амулет"};
         static string[] properties = { "уворота", "здоровья", "атаки", "критического урона", "жизни"};
 
-        string ItemName;
+        public string ItemName;
         public string ItemProp;
         public double ItemValue;
         static int checker;
@@ -157,25 +157,35 @@ namespace DaGame
             }
             else if (ItemName == "Бомба")
             {
-                Console.WriteLine(Hero.Name + " использует бомбу и наносит всем врагам 10 единиц урона");
-                /// бомба я хз
+                Console.WriteLine(Hero.Name + " использует бомбу и наносит всем врагам 7 единиц урона");
+                foreach (enemy enemumy in enemy.enemies)
+                {
+                    enemumy.HP -= 7;
+                }
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", бомба удалена из инвентаря");
             }
             else if (ItemName == "Ядовитая бомба")
             {
                 Console.WriteLine(Hero.Name + " использует ядовитую бомбу и наносит 3 единицы урона выбранному врагу 3 хода");
-                /// бомба я хз
+                int i = Program.InBattleEnemyChoose();
+                enemy.enemies[i].PoisonCounter = 2;
+                enemy.enemies[i].HP -= 3;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", ядовитая бомба удалена из инвентаря");
             }
             else if (ItemName == "Оглушающая бомба")
             {
                 Console.WriteLine(Hero.Name + " использует оглушающую бомбу и оглушает выбранного врага на 3 хода");
-                /// бомба я хз
+                int i = Program.InBattleEnemyChoose();
+                enemy.enemies[i].StanCounter = 2;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", оглушаяющая бомба удалена из инвентаря");
             }
+        }
+        static void PoisonBomb()
+        {
+
         }
     }
 }

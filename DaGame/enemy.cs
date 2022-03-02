@@ -21,6 +21,8 @@ namespace DaGame
         public string Name;
         public int HP;
         public int Exp;
+        public int PoisonCounter;
+        public int StanCounter;
 
 
         static public void ChooseEnemy(int level)
@@ -44,7 +46,7 @@ namespace DaGame
                 enemyHP = random.Next(26, 46);
                 enemyExp = 15;
             }
-            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp });
+            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp, PoisonCounter = 0, StanCounter = 0 });
         }
 
         static public int EnemyAttack(string name)
