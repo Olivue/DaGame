@@ -10,8 +10,8 @@ namespace DaGame
     internal class Program
     {
         static Random random = new Random();
-        public static bool SecondAttack = true;
-        public static bool ThirdAttack = true;
+        public static bool SecondAttack = false;
+        public static bool ThirdAttack = false;
 
         static void Main(string[] args)
         {
@@ -24,12 +24,12 @@ namespace DaGame
             Console.WriteLine("тебя значица зовут " + Hero.Name);
             Console.WriteLine("вот и твоя первая вражина!");
             Console.WriteLine("");
-            Items.ChooseItem("bombs");
-            Items.ChooseItem("bombs");
-            Items.ChooseItem("bombs");
-            Items.ChooseItem("bombs");
-            Items.ChooseItem("bombs");
-            Items.ChooseItem("bombs");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
+            Items.ChooseItem("items");
             Fight(3, 0, 0);
 
             Fight(1, 0, 0);
@@ -114,7 +114,7 @@ namespace DaGame
                     }
                     else
                     {
-                        if(enemy.enemies.Count == 1)
+                        if (enemy.enemies.Count == 1)
                         {
                             enemy.enemies[0].HP -= attack;
                             Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[0].Name + " " + attack + " урона");
@@ -130,7 +130,7 @@ namespace DaGame
                                     if (chance > 0.5)
                                     {
                                         enemy.enemies[numumber].HP -= attack / 2;
-                                        Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber].Name + " " + attack/2 + " урона");
+                                        Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber].Name + " " + attack / 2 + " урона");
                                     }
                                     else
                                     {
@@ -145,7 +145,7 @@ namespace DaGame
                                     Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
                                 }
                             }
-                         
+
                         }
                     }
                     List<int> count = new List<int>();
@@ -156,10 +156,12 @@ namespace DaGame
                         {
                             enemumy.PoisonCounter--;
                             enemumy.HP -= 3;
+                            Console.WriteLine(enemumy.Name + " нанесен урон ядом 3 ед.");
                         }
                         if (enemumy.StanCounter > 0)
                         {
-                            enemumy.StanCounter--;                            
+                            enemumy.StanCounter--;
+                            Console.WriteLine(enemumy.Name + " обездвижен и не атакует");
                         }
                         else
                         {
@@ -184,7 +186,7 @@ namespace DaGame
                             }
                         }
                     }
-                    count.Reverse();                    
+                    count.Reverse();
                     foreach (int i in count)
                     {
                         Console.WriteLine(enemy.enemies[i].Name + " умирает");
@@ -198,12 +200,13 @@ namespace DaGame
                     {
                         Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
                     }
-                    Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе");
+                    Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе из " + Hero.MaxHP);
                 }
                 else if (input == 'e' || input == 'у')
                 {
                     Hero.CheckInventory();
-                }                
+                }
+                if (Hero.HP <= 0) Hero.LifeCheck();
             }
             Console.WriteLine("");
             if (Hero.HP <= 0)

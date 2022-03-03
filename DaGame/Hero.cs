@@ -16,7 +16,7 @@ namespace DaGame
         public static int Attack = 5;
         public static int Exp;
         public static double HeroEvasion = 0.2;
-        public static double HeroCrit = 0.1;
+        public static double HeroCrit = 0.05;
         static double Riser;
         public static bool secondAttMarker;
         public static bool thirdAttMarker;
@@ -41,7 +41,6 @@ namespace DaGame
         {
             double evasion = random.NextDouble();
             Riser = 0;
-
             foreach(Items item in Equipment)
             {
                 if (item.ItemProp == "уворота")
@@ -55,12 +54,12 @@ namespace DaGame
 
         public static void CheckInventory() /// gotovo
         {
-            if (!Inventory.Any()) 
+            if (!Inventory.Any() & !Equipment.Any()) 
             {
                 Console.WriteLine("В инвентаре сейчас ничего нет");
                 return;
-            } 
-            Console.WriteLine("В инвентаре сейчас следующие предметы:");
+            }
+            if(Inventory.Any()) Console.WriteLine("В инвентаре сейчас следующие предметы:");
             int i = 1;
             foreach (string item in Inventory)
             {
@@ -73,9 +72,9 @@ namespace DaGame
             {
                 Console.WriteLine(item.ItemName + " " + item.ItemProp);
             }
-            Console.WriteLine("Для использования предмета введите его номер, для выхода из инвентаря нажмите Enter");
+            if (Inventory.Any()) Console.WriteLine("Для использования предмета введите его номер, для выхода из инвентаря нажмите Enter");
+            else Console.WriteLine("Для выхода из инвентаря нажмите Enter");
             string number = Console.ReadLine();
-
             if (number == "") return;
             if (int.TryParse(number, out int numumber))
             {
@@ -101,7 +100,6 @@ namespace DaGame
                 {
                     Console.WriteLine(" сильная атака - [e]");
                 }
-
                 Console.WriteLine("");
                 char input = Console.ReadKey(true).KeyChar;
                 if (input == 'q' || input == 'й')
@@ -128,11 +126,37 @@ namespace DaGame
                 att = Attack - random.Next(4);                
             }
             Console.WriteLine("");
-            return att;
+            int addAtt = 0;
+            foreach (Items item in Equipment)
+            {
+                if (item.ItemProp == "атаки")
+                {
+                    addAtt += (int)item.ItemValue;
+                }
+            }
+            return att + CritCheck() + addAtt;
         }
-        public static void BuffCheck()
+        public static void LifeCheck()
         {
-
+            int pizka = Equipment.FindIndex(x => x.ItemProp == "жизни");
+            Console.WriteLine(Equipment[pizka].ItemName + " " + Equipment[pizka].ItemProp + " разрушается и спасает вам жизнь, здоровье восстановлено наполовину");
+            Equipment.RemoveAt(pizka);
+            HP = MaxHP / 2;
+        }
+        static int CritCheck()
+        {
+            double crit = random.NextDouble();
+            int critAtt = random.Next(5, 11);
+            Riser = 0;
+            foreach (Items item in Equipment)
+            {
+                if (item.ItemProp == "уворота")
+                {
+                    Riser += item.ItemValue;
+                }
+            }
+            if (crit <= HeroCrit + Riser) return critAtt;
+            else return 0;
         }
     }
 }

@@ -51,6 +51,7 @@ namespace DaGame
                 {
                     Console.WriteLine("Предмета такого типа нет в инвентаре, " + Hero.Name + " надевает его на себя");
                     Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                    if (ChosenAttribute == "здоровья") Hero.MaxHP += (int)AttributeValue;
                     Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето");
                 }
                 else
@@ -76,9 +77,11 @@ namespace DaGame
                         char input = Console.ReadKey(true).KeyChar;
                         if (input == 'q' || input == 'й')
                         {
-                            Hero.Equipment.Remove(new Items() { ItemName = ChosenItem });
+                            if(Hero.Equipment[member - 1].ItemProp == "здоровья") Hero.MaxHP -= (int)Hero.Equipment[member - 1].ItemValue;
+                            Hero.Equipment.RemoveAt(member - 1);
                             Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
-                            Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето, прежнее снаряжение выброшено");
+                            if (ChosenAttribute == "здоровья") Hero.MaxHP += (int)AttributeValue;
+                            Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето, прежнее снаряжение выброшено");                            
                         }
                         else if (input == 'e' || input == 'у')
                         {
@@ -89,6 +92,7 @@ namespace DaGame
                     {
                         Console.WriteLine("Предмета такого типа нет в инвентаре, " + Hero.Name + " надевает его на себя");
                         Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                        if (ChosenAttribute == "здоровья") Hero.MaxHP += (int)AttributeValue;
                         Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето");
                     }
                 }
@@ -119,7 +123,7 @@ namespace DaGame
 
             if (ChosenAttribute == "уворота")
             {
-                AttributeValue = random.Next(10, 41) / 100D;
+                AttributeValue = random.Next(10, 31) / 100D;
             }
             else if (ChosenAttribute == "здоровья")
             {
@@ -131,7 +135,7 @@ namespace DaGame
             }
             else if (ChosenAttribute == "критического урона")
             {
-                AttributeValue = random.Next(5, 21) / 100D;
+                AttributeValue = random.Next(5, 16) / 100D;
             }
             else if (ChosenAttribute == "жизни")
             {
@@ -182,10 +186,6 @@ namespace DaGame
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", оглушаяющая бомба удалена из инвентаря");
             }
-        }
-        static void PoisonBomb()
-        {
-
         }
     }
 }
