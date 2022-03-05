@@ -10,10 +10,10 @@ namespace DaGame
     {
         static Random random = new Random();
 
-        static string[] potions = { "Зелье лечения", "Сильное зелье лечения"};
-        static string[] bombs = { "Бомба", "Ядовитая бомба", "Оглушающая бомба"};
-        static string[] items = { "Серьги", "Чётки", "Амулет"};
-        static string[] properties = { "уворота", "здоровья", "атаки", "критического урона", "жизни"};
+        static readonly string[] potions = { "Зелье лечения", "Сильное зелье лечения", "Противоядие", "Святая вода"};
+        static readonly string[] bombs = { "Бомба", "Ядовитая бомба", "Оглушающая бомба"};
+        static readonly string[] items = { "Серьги", "Чётки", "Амулет"};
+        static readonly string[] properties = { "уворота", "здоровья", "атаки", "критического урона", "жизни"};
 
         public string ItemName;
         public string ItemProp;
