@@ -12,18 +12,21 @@ namespace DaGame
         static Random random = new Random();
         public static bool SecondAttack = false;
         public static bool ThirdAttack = false;
-
+       
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.ASCII;
             Console.InputEncoding = Encoding.Unicode;
 
             Console.WriteLine("имя введи");
             string name = Console.ReadLine();
+
             Hero.Name = name;
             Console.WriteLine("тебя значица зовут " + Hero.Name);
             Console.WriteLine("вот и твоя первая вражина!");
             Console.WriteLine("");
+            Console.WriteLine(DaBosss.Leviathan + DaBosss.Hellebore + DaBosss.Wyvern + DaBosss.Basilisk + DaBosss.Serpent);
             Items.ChooseItem("items");
             Items.ChooseItem("items");
             Items.ChooseItem("items");
@@ -211,9 +214,6 @@ namespace DaGame
             Console.WriteLine("");
             if (Hero.HP <= 0)
             {
-                Console.WriteLine("помер получается");
-                Console.WriteLine("");
-                Console.WriteLine("> > > ИГРА ОКОНЧЕНА < < <");
                 EndGame();
             }
             else
@@ -250,9 +250,40 @@ namespace DaGame
         }
         static void EndGame()
         {
+            string deadHead = @"
+                           ,--.
+                          {    }
+                          K,   }
+                         /  `Y`
+                    _   /   /
+                   {_'-K.__/
+                     `/-.__L._
+                     /  ' /`\_}
+                    /  ' /     
+            ____   /  ' /
+     ,-'~~~~    ~~/  ' /_
+   ,'             ``~~~%%',
+  (                     %  Y
+ {                      %% I
+{      -                 %  `.
+|       ',                %  )
+|        |   ,..__      __. Y
+|    .,_./  Y ' / ^Y   J   )|
+\           |' /   |   |   ||
+ \          L_/    . _ (_,.'(
+  \,   ,      ^^``' / |      )
+    \_  \          /,L]     /
+      '-_`-,       ` `   ./`
+         `-(_            )
+             ^^\..___,.--`";
+            Console.WriteLine("помер получается");
+            Console.WriteLine("");
+            Console.WriteLine("> > > ИГРА ОКОНЧЕНА < < <");
+            Console.WriteLine("");
+            Console.WriteLine(deadHead);
             Console.ReadLine();
             Environment.Exit(0);
-        }
+        }        
     }
 }
 

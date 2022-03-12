@@ -23,8 +23,7 @@ namespace DaGame
         public int Exp;
         public int PoisonCounter;
         public int StanCounter;
-
-
+        
         static public void ChooseEnemy(int level)
         {
             if (level == 1)
