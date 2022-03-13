@@ -18,6 +18,7 @@ namespace DaGame
             Console.OutputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.ASCII;
             Console.InputEncoding = Encoding.Unicode;
+            DaBosss.Bosses();
 
             Console.WriteLine("имя введи");
             string name = Console.ReadLine();
@@ -27,6 +28,7 @@ namespace DaGame
             Console.WriteLine("вот и твоя первая вражина!");
             Console.WriteLine("");
             Console.WriteLine(DaBosss.Leviathan + DaBosss.Hellebore + DaBosss.Wyvern + DaBosss.Basilisk + DaBosss.Serpent);
+            Events.SPR();
             Items.ChooseItem("items");
             Items.ChooseItem("items");
             Items.ChooseItem("items");
@@ -41,34 +43,34 @@ namespace DaGame
             Items.ChooseItem("items");
             Fight(2, 0, 0);
 
-            ///ivent
+            Events.Level1Events();
             
             Fight(1, 0, 0);
             Fight(3, 0, 0);
 
             ///level 2
             ///добавляем вторую атаку
-            ///суперАтака = труе
+            SecondAttack = true;
             
             Fight(2, 0, 0);
             Fight(0, 1, 0);
             Fight(2, 1, 0);
 
-            ///ivent
+            Events.Level2Events();
             
             Fight(2, 0, 0);
             Fight(0, 2, 0);
 
             ///level3
             ///добавляем третью атаку
-            ///суперПуперАтака = труе
+            ThirdAttack = true;
 
             Fight(2, 0, 0);
             Fight(2, 1, 0);
             Fight(0, 0, 1);
             Fight(1, 0, 1);
 
-            ///ivent
+            Events.Level3Events();
 
             Fight(2, 1, 0);
             Fight(2, 0, 1);

@@ -25,12 +25,20 @@ namespace DaGame
             CoolAttacks.Add(AutoHill);
             CoolAttacks.Add(BossEvasion);
             CoolAttacks.Add(QTE);
+            //CoolAttacks[0]();
 
             Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0 });
+            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1 });
+            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2 });
+            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3 });
         }
         static void SummonAttack()
         {
-            
+            int count = random.Next(1,4);
+            for (int i = 0; i < count; i++)
+			{
+                enemy.ChooseEnemy(1);
+			}            
         }
 
         static void NegativeEffects()
