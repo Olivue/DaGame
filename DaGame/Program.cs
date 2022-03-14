@@ -16,7 +16,6 @@ namespace DaGame
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            Console.OutputEncoding = Encoding.ASCII;
             Console.InputEncoding = Encoding.Unicode;
             DaBosss.Bosses();
 
@@ -29,6 +28,8 @@ namespace DaGame
             Console.WriteLine("");
             Console.WriteLine(DaBosss.Leviathan + DaBosss.Hellebore + DaBosss.Wyvern + DaBosss.Basilisk + DaBosss.Serpent);
             Events.SPR();
+            Events.Lottery();
+            Events.Sacrifice();
             Items.ChooseItem("items");
             Items.ChooseItem("items");
             Items.ChooseItem("items");

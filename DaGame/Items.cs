@@ -73,20 +73,26 @@ namespace DaGame
                         Console.WriteLine(Hero.Equipment[member - 1].ItemName + " уже есть в инвентаре");
                         Console.WriteLine(Hero.Equipment[member - 1].ItemName + " " + Hero.Equipment[member - 1].ItemProp + " " + Hero.Equipment[member - 1].ItemValue + " - надето");
                         Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - можете надеть");
-                        Console.WriteLine("Если хочешь сменить предмет - нажми [q], если хочешь оставить предыдущий - нажми [e]");
-                        char input = Console.ReadKey(true).KeyChar;
-                        if (input == 'q' || input == 'й')
+                        Console.WriteLine("Если хочешь сменить предмет - нажми [q], если хочешь оставить предыдущий - нажми [e]");                        
+                        while (true)
                         {
-                            if(Hero.Equipment[member - 1].ItemProp == "здоровья") Hero.MaxHP -= (int)Hero.Equipment[member - 1].ItemValue;
-                            Hero.Equipment.RemoveAt(member - 1);
-                            Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
-                            if (ChosenAttribute == "здоровья") Hero.MaxHP += (int)AttributeValue;
-                            Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето, прежнее снаряжение выброшено");                            
+                            char input = Console.ReadKey(true).KeyChar;
+                            if (input == 'q' || input == 'й')
+                            {
+                                if (Hero.Equipment[member - 1].ItemProp == "здоровья") Hero.MaxHP -= (int)Hero.Equipment[member - 1].ItemValue;
+                                Hero.Equipment.RemoveAt(member - 1);
+                                Hero.Equipment.Add(new Items() { ItemName = ChosenItem, ItemProp = ChosenAttribute, ItemValue = AttributeValue });
+                                if (ChosenAttribute == "здоровья") Hero.MaxHP += (int)AttributeValue;
+                                Console.WriteLine(ChosenItem + " " + ChosenAttribute + " " + AttributeValue + " - теперь надето, прежнее снаряжение выброшено");
+                                break;
+                            }
+                            else if (input == 'e' || input == 'у')
+                            {
+                                Console.WriteLine(Hero.Equipment[member - 1].ItemName + " " + Hero.Equipment[member - 1].ItemProp + " " + Hero.Equipment[member - 1].ItemValue + " - все еще надето, другой предмет выброшен");
+                                break;
+                            }
                         }
-                        else if (input == 'e' || input == 'у')
-                        {
-                            Console.WriteLine(Hero.Equipment[member - 1].ItemName + " " + Hero.Equipment[member - 1].ItemProp + " " + Hero.Equipment[member - 1].ItemValue + " - все еще надето, другой предмет выброшен");
-                        }
+
                     }
                     else
                     {

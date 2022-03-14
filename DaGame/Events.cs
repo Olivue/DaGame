@@ -88,26 +88,35 @@ namespace DaGame
         }
 
 
-        static void HiddenLoot()
+        public static void HiddenLoot()
         {
-            ///зелька и предмет
+            Console.WriteLine("");
+            Console.WriteLine("Воу, ты находишь схрон, кто-то неплохо затарился. Ты предпочитаешь взять содержимое схрона себе");
+            Items.ChooseItem("poisons");
+            Items.ChooseItem("potions");
+            Items.ChooseItem("bombs");
         }
 
-        static void LifeFountain()
+        public static void LifeFountain()
         {
             Hero.HP = Hero.MaxHP;
             Console.WriteLine("");
+            Console.WriteLine("Ты находишь источник жизни, твое здоровье восстанавливается. Рядом валяются брошенные склянки. Ты набираешь в них воду из источника.");
+            Items.ChooseItem("poisons");
+            Items.ChooseItem("potions");
         }
 
-        static void CoolTeachers()
+        public static void CoolTeachers()
         {
             Hero.Exp += 20;
-            Console.WriteLine("");
+            Console.WriteLine("Ты встречаешь странника. Ночью у костра он рассказывает тебе о своих путешествиях и дает пару полезных советов.");
+            Console.WriteLine("Ты усваиваешь чужой опыт. На прощание странник дает тебе кое-что и расстворяется в утреннем тумане.");
+            Items.ChooseItem("items");
         }
 
-        static void Lottery()
+        public static void Lottery()
         {
-            Console.WriteLine("");
+            Console.WriteLine("Перед тобой три сундука, выбери один из трех, выбирай аккуратно, если ткнешь мимо, не сможешь открыть ни один сундук");
             int choise = random.Next(3);
             char input = Console.ReadKey(true).KeyChar;
             if (input == 'q' || input == 'й' || input == 'w' || input == 'ц' || input == 'e' || input == 'у')
@@ -121,69 +130,81 @@ namespace DaGame
                 {
                     Console.WriteLine("Да тут настоящий клад!");
                     Items.ChooseItem("potions");
-                    Items.ChooseItem("potions");
-                    Items.ChooseItem("bombs");
                     Items.ChooseItem("bombs");
                     Items.ChooseItem("items");
                 }
                 else if (choise == 2)
                 {
                     Console.WriteLine("В этом сундуке пусто, ты ничего не получил");
-                }         
+                }
+                Console.WriteLine("Ну как тебе твой приз? Сударь ухмыльнулся кривой улыбкой, кричи о своем выйгрыше погромче, вдруг кто еще придет");
             }
             else Console.WriteLine("Ты не стал выбирать сундук, а просто ушел прочь");
         }
 
         public static void SPR()
         {
-            string[] SPRthings = { "камень", "ножницы", "бумагу"};
+            string[] SPRthings = { "камень", "ножницы", "бумагу" };
             Console.WriteLine("");
             Console.WriteLine("Играем до 3-х побед");
             int wins = 0;
             int loses = 0;
-            while (wins != 3 || loses != 3)
+            while (wins != 3 & loses != 3)
             {
-                // 1 побежждает 2, 2 побеждает 3, 3 побеждает 1
                 Console.WriteLine("");
                 Console.WriteLine("Камень - нажми [1], ножницы - нажми [2], бумага - нажми [3]");
-                int enemySign = random.Next(1,4);
-                int input = (int)Console.ReadKey(true).KeyChar;
-                //int.TryParse(input, out int number);
-                Console.WriteLine("Ты показываешь " + SPRthings[input-1]);
-                Console.WriteLine("Чувак показывает " + SPRthings[enemySign-1]);
-                if(enemySign == input) Console.WriteLine("Ничья, никто не получает очко");
-                else if(input == '1' & enemySign == 2 || input == '2' & enemySign == 3 || input == '3' & enemySign == 1)
+                int input = 0;
+                int enemySign = random.Next(1, 4);
+                char getShit = Console.ReadKey(true).KeyChar;
+                if (int.TryParse(getShit.ToString(), out int number)) input = number;
+                if (number != 1 & number != 2 & number != 3) continue;
+                Console.WriteLine("Ты показываешь " + SPRthings[input - 1]);
+                Console.WriteLine("Чувак показывает " + SPRthings[enemySign - 1]);
+                if (enemySign == input) Console.WriteLine("Ничья, никто не получает очко");
+                else if (input == 1 & enemySign == 2 || input == 2 & enemySign == 3 || input == 3 & enemySign == 1)
                 {
                     wins++;
-                    Console.WriteLine("Ты выйграл очко");                    
+                    Console.WriteLine("Ты выйграл очко");
                 }
-                else if(input == '1' & enemySign == 3 || input == '2' & enemySign == 1 || input == '3' & enemySign == 2)
+                else if (input == 1 & enemySign == 3 || input == 2 & enemySign == 1 || input == 3 & enemySign == 2)
                 {
                     loses++;
                     Console.WriteLine("Ты проиграл очко");
                 }
-                Console.WriteLine("Текущий счёт: " + wins + " : " + loses); 
+                Console.WriteLine("Текущий счёт: " + wins + " : " + loses);
             }
+            Console.WriteLine("");
             if (wins == 3)
             {
                 Console.WriteLine("Ты выйграл и получаешь приз");
                 Items.ChooseItem("potions");
                 Items.ChooseItem("potions");
-                Items.ChooseItem("items");
+                Items.ChooseItem("items");                
             }
             else Console.WriteLine("Ты проиграл, вали отсюда");
         }
 
-        static void Sacrifice()
+        public static void Sacrifice()
         {
             Console.WriteLine("");
-            char input = Console.ReadKey(true).KeyChar;
-            if (input == 'q' || input == 'й')
+            Console.WriteLine("Пожертвуй свою кровь, и наш бог благославит тебя за твою жертву");
+            while (true)
             {
-                Console.WriteLine("пищ пищ пуу");
-
+                char input = Console.ReadKey(true).KeyChar;
+                if (input == 'q' || input == 'й')
+                {
+                    Console.WriteLine("пищ пищ пуу, тебя протыкают иглами и тебе бобо");
+                    Hero.HP -= 20;
+                    Items.ChooseItem("items");
+                    Hero.Exp += 20;
+                    break;
+                }
+                else if (input == 'w' || input == 'ц')
+                {
+                    Console.WriteLine("Тебя пугает такая перспектива, и ты в ужасе выбегаешь из пещеры, подальше от этих сумасшедших фанатиков");
+                    break;
+                }
             }
-            else if(input == 'w' || input == 'ц') return;
         }
 
         static void Offering()
