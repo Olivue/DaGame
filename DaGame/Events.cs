@@ -11,7 +11,7 @@ namespace DaGame
         static Random random = new Random();
         static public void Level1Events()
         {
-            int choice = random.Next(4);
+            int choice = random.Next(3);
             if (choice == 0)
             {
                 HiddenLoot();
@@ -24,67 +24,40 @@ namespace DaGame
             {
                 CoolTeachers();
             }
-            else if (choice == 3)
-            {
-                Lottery();
-            }
-
         }
 
         static public void Level2Events()
         {
-            int choice = random.Next(5);
+            int choice = random.Next(3);
             if (choice == 0)
             {
-                HiddenLoot();
+                Lottery();
             }
             else if (choice == 1)
             {
-                LifeFountain();
+                SPR();
             }
             else if (choice == 2)
             {
-                CoolTeachers();
-            }
-            else if (choice == 3)
-            {
-                Labyrinth();
-            }
-            else if (choice == 4)
-            {
                 Offering();
             }
-
         }
 
         static public void Level3Events()
         {
-            int choice = random.Next(6);
+            int choice = random.Next(3);
             if (choice == 0)
             {
-                HiddenLoot();
+                Labyrinth();
             }
             else if (choice == 1)
             {
-                LifeFountain();
+                Sacrifice();
             }
             else if (choice == 2)
             {
-                CoolTeachers();
-            }
-            else if (choice == 3)
-            {
-                SPR();
-            }
-            else if (choice == 4)
-            {
-                Sacrifice();
-            }
-            else if (choice == 5)
-            {
                 Trap();
             }
-
         }
 
 
@@ -118,8 +91,9 @@ namespace DaGame
         {
             Console.WriteLine("Перед тобой три сундука, выбери один из трех, выбирай аккуратно, если ткнешь мимо, не сможешь открыть ни один сундук");
             int choise = random.Next(3);
-            char input = Console.ReadKey(true).KeyChar;
-            if (input == 'q' || input == 'й' || input == 'w' || input == 'ц' || input == 'e' || input == 'у')
+            Console.WriteLine("Для выбора первого сундука - нажми [1], второго - нажми [2], третьего - нажми [3]");
+            char input = Console.ReadKey(true).KeyChar;            
+            if (input == '1' || input == '2' || input == '3')
             {
                 if (choise == 0)
 	            {
@@ -188,13 +162,14 @@ namespace DaGame
         {
             Console.WriteLine("");
             Console.WriteLine("Пожертвуй свою кровь, и наш бог благославит тебя за твою жертву");
+            Console.WriteLine("Нажми [q] чтоб сделать жертвоприношение,[w] чтоб пройти мимо");
             while (true)
             {
                 char input = Console.ReadKey(true).KeyChar;
                 if (input == 'q' || input == 'й')
                 {
                     Console.WriteLine("пищ пищ пуу, тебя протыкают иглами и тебе бобо");
-                    Hero.HP -= 20;
+                    Hero.HP = 1;
                     Items.ChooseItem("items");
                     Hero.Exp += 20;
                     break;
@@ -207,22 +182,39 @@ namespace DaGame
             }
         }
 
-        static void Offering()
+        public static void Offering()
         {
-            Console.WriteLine("");
-            char input = Console.ReadKey(true).KeyChar;
-            if (input == 'q' || input == 'й')
+            Console.WriteLine("Какой-то старик просит помощи, ему нужна зелька");
+            Console.WriteLine("Нажми [q] чтоб дать хилку старику,[w] чтоб пройти мимо");
+            while (true)
             {
-                Console.WriteLine(" ");
-                int chance = random.Next(1);
-                if (chance == 1)
+                char input = Console.ReadKey(true).KeyChar;
+                if (input == 'q' || input == 'й')
                 {
-                    Console.WriteLine("");
-
+                    if (Hero.Inventory.Contains("Зелье лечения") || Hero.Inventory.Contains("Сильное зелье лечения"))
+                    {
+                        Console.WriteLine("Ты решаешь дать старику зелье, все равно у тебя нет ничего более подходящего, а ему больше и не надо");
+                        int pizka = 0;
+                        if (Hero.Inventory.Contains("Зелье лечения")) pizka = Hero.Inventory.FindIndex(x => x == "Зелье лечения");
+                        if (Hero.Inventory.Contains("Сильное зелье лечения")) pizka = Hero.Inventory.FindIndex(x => x == "Сильное зелье лечения");
+                        Hero.Inventory.RemoveAt(pizka);
+                        int chance = random.Next(2);
+                        if (chance == 1)
+                        {
+                            Console.WriteLine("Старик осторожно берет зелье и убирает в складки своих лохмотьев. В благодарность он рассказывает о том, что видел, пока сидит здесь. Ты получаешь очки опыта");
+                            Hero.Exp += 40;
+                        }
+                        else Console.WriteLine("Старик выхватывает протянутое зелье и жадно глотает содержимое. Внезапно он заходится кашлем. Тебе кажется, что он сейчас выплюнет свои легкие, но ты не знаешь, чем ему помочь. Старик скрючивается и хрипя протягивает тебе руку. Через пару мгновений рука падает, а старик издает последний тихий хрип. У тебя нет времени на похороны. Ты оставляешь тело и уходишь прочь.");
+                    }
+                    else Console.WriteLine("Тебе нечего дать старику. Ты вздыхаешь и проходишь мимо.");
+                    break;
                 }
-                else return;
-            }
-            else if (input == 'w' || input == 'ц') return;
+                else if (input == 'w' || input == 'ц')
+                {
+                    Console.WriteLine("Ты решаешь не давать ничего старику. Ты уходишь. Старик провожает тебя взглядом, пока ты не скрываешься");
+                    break;
+                }
+            }            
         }
 
         static void Trap()
@@ -231,10 +223,89 @@ namespace DaGame
             /// qte)))
         }
 
-        static void Labyrinth()
+        public static void Labyrinth()
         {
+            string[,] grid =
+            {
+                {"+", "-", "+", "-", "-", "-", "+" },
+                {"|", " ", "|", " ", " ", " ", "|" },
+                {" ", " ", "|", " ", "|", " ", "|" },
+                {"|", " ", "|", " ", "|", " ", "|" },
+                {"|", " ", " ", " ", "|", " ", "x" },
+                {"+", "-", "-", "-", "+", "-", "+" },
+            };
+
+            int rows = grid.GetLength(0);
+            int cols = grid.GetLength(1);
+
+            string canI = "jopa";
+            int CheckX = 6;
+            int CheckY = 4;
+
+            if(CheckX < 0 || CheckY < 0 || CheckX >= cols || CheckY >= rows)
+            {
+                canI = "false";
+            }
+            else
+            {
+                if (grid[CheckY, CheckX] == " " || grid[CheckY, CheckX] == "x")
+                {
+                    canI = "true";
+                }
+                else canI = "pixa";
+            }
+
             Console.WriteLine("");
-            /// )))
+            Console.WriteLine(canI);
+
+            int PlayerX = 0;
+            int PlayerY = 2;
+            string PlayerMarker = "0";
+            ConsoleColor PlayerColor = ConsoleColor.Red;
+
+
+
+            while (true)
+            {
+                Console.Clear();
+                for (int y = 0; y < rows; y++)
+                {
+                    for (int x = 0; x < cols; x++)
+                    {
+                        string element = grid[y, x];
+                        Console.SetCursorPosition(x, y);
+                        Console.Write(element);
+                    }
+                }
+                Console.ForegroundColor = PlayerColor;
+                Console.SetCursorPosition(PlayerX, PlayerY);
+                Console.Write(PlayerMarker);
+                Console.ResetColor();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                ConsoleKey key = keyInfo.Key;
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        PlayerY -= 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        PlayerY += 1;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        PlayerX -= 1;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        PlayerX += 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                System.Threading.Thread.Sleep(20);
+
+                //break;
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DaGame
 
         public static string Name;
         public static int MaxHP = 50;
-        public static int HP = 50;
+        public static int HP = 10;
         public static int Attack = 5;
         public static int Exp;
         public static double HeroEvasion = 0.2;
@@ -138,10 +138,18 @@ namespace DaGame
         }
         public static void LifeCheck()
         {
-            int pizka = Equipment.FindIndex(x => x.ItemProp == "жизни");
-            Console.WriteLine(Equipment[pizka].ItemName + " " + Equipment[pizka].ItemProp + " разрушается и спасает вам жизнь, здоровье восстановлено наполовину");
-            Equipment.RemoveAt(pizka);
-            HP = MaxHP / 2;
+            int counter = 0;
+            foreach(Items item in Equipment)
+            {
+                if(item.ItemProp == "жизни") counter++;
+            }
+            if(counter >= 1) 
+            {
+                int pizka = Equipment.FindIndex(x => x.ItemProp == "жизни");
+                Console.WriteLine(Equipment[pizka].ItemName + " " + Equipment[pizka].ItemProp + " разрушается и спасает вам жизнь, здоровье восстановлено наполовину");
+                Equipment.RemoveAt(pizka);
+                HP = MaxHP / 2;
+            }
         }
         static int CritCheck()
         {
