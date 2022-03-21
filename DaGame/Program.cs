@@ -19,6 +19,7 @@ namespace DaGame
             Console.InputEncoding = Encoding.Unicode;
             DaBosss.Bosses();
 
+            Events.Trap();
             Events.Labyrinth();
 
             //var text = "If you have a single word that is greater than the specified column width, it will overrun the column boundary to the right. This is the only case where your text might spill over beyond the width specified. This is by design. There's no great way to handle it. The other options would have been to truncate the word, or to hard break the word in the middle of it somewhere.Unfortunately, this does not preserve whitespace, except line breaks. Tabs will be converted to spaces and multiple characters of whitespace will be turned into a single space. Making this preserve whitespace greatly increases the complexity so I decided not to do it.";

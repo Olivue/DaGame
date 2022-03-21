@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Timers;
 
 namespace DaGame
 {
     internal class Events
     {
         static Random random = new Random();
+
+
         static public void Level1Events()
         {
             int choice = random.Next(3);
@@ -218,10 +221,72 @@ namespace DaGame
             }            
         }
 
-        static void Trap()
+        public static void Trap()
         {
             Console.WriteLine("");
-            /// qte)))
+            Console.WriteLine("ну чтож, сейчас будет пиздиловка");
+            Console.WriteLine("тыркни чтоб начать пиздиловку");
+            Console.ReadKey(true);
+
+            char[] qte = { 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c'};
+            char randomChar;
+            
+            Timer timer = new Timer(1000);
+            int i;
+            char tab;
+
+            while (true)
+            {
+                randomChar = qte[random.Next(qte.Length)];
+                i = 10;
+                while (i > 0)
+                {
+                    tab = Console.ReadKey(true).KeyChar;
+                    timer.Elapsed += Timer_Elapsed;
+                    timer.Start();
+
+                    Console.WriteLine("конец не конец?");
+                    
+
+                }
+                Console.ReadKey(true);
+            }
+
+            void Timer_Elapsed(object sender, ElapsedEventArgs e)
+            {
+                i--;                
+                Console.Clear();
+                Console.WriteLine("=================================================");
+                Console.WriteLine("                  DEFUSE THE BOMB");
+                Console.WriteLine("");
+                Console.WriteLine("                Времени осталось:  " + i.ToString());
+                Console.WriteLine("");
+                Console.WriteLine("                Нажми на кнопку:  " + randomChar);
+                Console.WriteLine("");
+                Console.WriteLine("=================================================");
+
+                if (i == 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("");
+                    Console.WriteLine("==============================================");
+                    Console.WriteLine("         B O O O O O M M M M M ! ! ! !");
+                    Console.WriteLine("");
+                    Console.WriteLine("               G A M E  O V E R");
+                    Console.WriteLine("==============================================");
+
+                    timer.Close();
+                    timer.Dispose();
+                }
+                if (tab == randomChar || i == 0)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    Console.WriteLine("pizka");
+                    //break;
+                }
+                GC.Collect();
+            }
         }
 
         public static void Labyrinth()
@@ -310,20 +375,13 @@ namespace DaGame
                 }
 
                 if (grid[PlayerY, PlayerX] == "X") break;
-                if (grid[PlayerY, PlayerX] == "V")
+                if (grid[PlayerY, PlayerX] == "V" || grid[PlayerY, PlayerX] == "Ф")
                 {
-                    grid[PlayerY, PlayerX] = " ";
                     Console.SetCursorPosition(0, 25);
-                    Items.ChooseItem("potions");
+                    if(grid[PlayerY, PlayerX] == "V") Items.ChooseItem("potions");
+                    else Items.ChooseItem("bombs");
                     Console.WriteLine("Нажми любую кнопку, чтобы продолжить двигаться");
-                    Console.ReadKey(true);
-                }
-                if (grid[PlayerY, PlayerX] == "Ф")
-                {
                     grid[PlayerY, PlayerX] = " ";
-                    Console.SetCursorPosition(0, 25);
-                    Items.ChooseItem("bombs");
-                    Console.WriteLine("Нажми любую кнопку, чтобы продолжить двигаться");
                     Console.ReadKey(true);
                 }
                 //System.Threading.Thread.Sleep(20);
@@ -339,7 +397,7 @@ namespace DaGame
             }
             
             Console.SetCursorPosition(0, 25);
-            Console.WriteLine("Ты прошел злоебучий лабиринт. Впереди ты видишь свет. Надо только расталкать несколько камней и продолжить путь.");
+            Console.WriteLine("Ты прошел злоебучий лабиринт. Впереди ты видишь свет. Надо только растолкать несколько камней и продолжить путь.");
             Console.WriteLine("Ты делаешь короткую передышку, пока есть время.");
             Console.WriteLine("Нажми любую клавишу, чтобы продолжить свой путь.");
             Console.ReadKey(true);
