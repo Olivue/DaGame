@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DaGame
 {
@@ -162,7 +163,7 @@ namespace DaGame
         {
             Console.WriteLine("");
             Console.WriteLine("Пожертвуй свою кровь, и наш бог благославит тебя за твою жертву");
-            Console.WriteLine("Нажми [q] чтоб сделать жертвоприношение,[w] чтоб пройти мимо");
+            Console.WriteLine("Нажми [q] чтоб сделать жертвоприношение,[e] чтоб пройти мимо");
             while (true)
             {
                 char input = Console.ReadKey(true).KeyChar;
@@ -174,7 +175,7 @@ namespace DaGame
                     Hero.Exp += 20;
                     break;
                 }
-                else if (input == 'w' || input == 'ц')
+                else if (input == 'e' || input == 'у')
                 {
                     Console.WriteLine("Тебя пугает такая перспектива, и ты в ужасе выбегаешь из пещеры, подальше от этих сумасшедших фанатиков");
                     break;
@@ -204,7 +205,7 @@ namespace DaGame
                             Console.WriteLine("Старик осторожно берет зелье и убирает в складки своих лохмотьев. В благодарность он рассказывает о том, что видел, пока сидит здесь. Ты получаешь очки опыта");
                             Hero.Exp += 40;
                         }
-                        else Console.WriteLine("Старик выхватывает протянутое зелье и жадно глотает содержимое. Внезапно он заходится кашлем. Тебе кажется, что он сейчас выплюнет свои легкие, но ты не знаешь, чем ему помочь. Старик скрючивается и хрипя протягивает тебе руку. Через пару мгновений рука падает, а старик издает последний тихий хрип. У тебя нет времени на похороны. Ты оставляешь тело и уходишь прочь.");
+                        else Console.WriteLine("Старик выхватывает протянутое зелье и жадно глотает содержимое. Внезапно он заходится кашлем. Тебе кажется, что он сейчас выплюнет свои легкие, но ты не знаешь, чем ему помочь. Старик скрючивается и хрипя протягивает тебе руку. Через пару мгновений рука падает, а старик издает последний тихий хрип. У тебя нет времени и сил на похороны. Ты оставляешь тело нетронутым и уходишь прочь.");
                     }
                     else Console.WriteLine("Тебе нечего дать старику. Ты вздыхаешь и проходишь мимо.");
                     break;
@@ -225,48 +226,35 @@ namespace DaGame
 
         public static void Labyrinth()
         {
-            string[,] grid =
-            {
-                {"+", "-", "+", "-", "-", "-", "+" },
-                {"|", " ", "|", " ", " ", " ", "|" },
-                {" ", " ", "|", " ", "|", " ", "|" },
-                {"|", " ", "|", " ", "|", " ", "|" },
-                {"|", " ", " ", " ", "|", " ", "x" },
-                {"+", "-", "-", "-", "+", "-", "+" },
-            };
+            Console.WriteLine("Ты видишь перед собой узкий коридор, который разветвляется на несколько путей.");
+            Console.WriteLine("Чтож, путь назад отрезан, тебе остается только идти вперед.");
+            Console.WriteLine("Нажми любую клавишу, чтобы войти в рукав пещеры. Для дальнейшего перемещения используй стрелки клавиатуры.");
+            Console.ReadKey(true);
+            Console.Clear();
 
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            string canI = "jopa";
-            int CheckX = 6;
-            int CheckY = 4;
-
-            if(CheckX < 0 || CheckY < 0 || CheckX >= cols || CheckY >= rows)
+            string[] lines = File.ReadAllLines("Map.txt");
+            string firstLine = lines[0];
+            int rows = lines.Length;
+            int cols = firstLine.Length;
+            string[,] grid = new string[rows, cols];
+            for (int r = 0; r < rows; r++)
             {
-                canI = "false";
-            }
-            else
-            {
-                if (grid[CheckY, CheckX] == " " || grid[CheckY, CheckX] == "x")
+                string line = lines[r];
+                for (int c = 0; c < cols; c++)
                 {
-                    canI = "true";
+                    char currentChar = line[c];
+                    grid[r, c] = currentChar.ToString();
                 }
-                else canI = "pixa";
             }
-
-            Console.WriteLine("");
-            Console.WriteLine(canI);
 
             int PlayerX = 0;
-            int PlayerY = 2;
+            int PlayerY = 5;
             string PlayerMarker = "0";
             ConsoleColor PlayerColor = ConsoleColor.Red;
 
-
-
             while (true)
             {
+                Console.CursorVisible = false;
                 Console.Clear();
                 for (int y = 0; y < rows; y++)
                 {
@@ -274,9 +262,28 @@ namespace DaGame
                     {
                         string element = grid[y, x];
                         Console.SetCursorPosition(x, y);
-                        Console.Write(element);
+                        if(element == "Ф")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine(element);
+                            Console.ResetColor();
+                        }
+                        else if(element == "V")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine(element);
+                            Console.ResetColor();
+                        }
+                        else if(element == "X")
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine(element);
+                            Console.ResetColor();
+                        }
+                        else Console.Write(element);
                     }
                 }
+
                 Console.ForegroundColor = PlayerColor;
                 Console.SetCursorPosition(PlayerX, PlayerY);
                 Console.Write(PlayerMarker);
@@ -287,25 +294,56 @@ namespace DaGame
                 switch (key)
                 {
                     case ConsoleKey.UpArrow:
-                        PlayerY -= 1;
+                        if (WallChecker(PlayerX, PlayerY - 1)) PlayerY -= 1;
                         break;
                     case ConsoleKey.DownArrow:
-                        PlayerY += 1;
+                        if (WallChecker(PlayerX, PlayerY + 1)) PlayerY += 1;
                         break;
                     case ConsoleKey.LeftArrow:
-                        PlayerX -= 1;
+                        if (WallChecker(PlayerX - 1, PlayerY)) PlayerX -= 1;
                         break;
                     case ConsoleKey.RightArrow:
-                        PlayerX += 1;
+                        if (WallChecker(PlayerX + 1, PlayerY)) PlayerX += 1;
                         break;
                     default:
                         break;
                 }
 
-                System.Threading.Thread.Sleep(20);
-
-                //break;
+                if (grid[PlayerY, PlayerX] == "X") break;
+                if (grid[PlayerY, PlayerX] == "V")
+                {
+                    grid[PlayerY, PlayerX] = " ";
+                    Console.SetCursorPosition(0, 25);
+                    Items.ChooseItem("potions");
+                    Console.WriteLine("Нажми любую кнопку, чтобы продолжить двигаться");
+                    Console.ReadKey(true);
+                }
+                if (grid[PlayerY, PlayerX] == "Ф")
+                {
+                    grid[PlayerY, PlayerX] = " ";
+                    Console.SetCursorPosition(0, 25);
+                    Items.ChooseItem("bombs");
+                    Console.WriteLine("Нажми любую кнопку, чтобы продолжить двигаться");
+                    Console.ReadKey(true);
+                }
+                //System.Threading.Thread.Sleep(20);
             }
+
+            bool WallChecker(int x, int y)
+            {
+                if (x < 0 || y < 0 || x >= cols || y >= rows)
+                {
+                    return false;
+                }
+                return grid[y, x] == " " || grid[y, x] == "X" || grid[y, x] == "V" || grid[y, x] == "Ф";
+            }
+            
+            Console.SetCursorPosition(0, 25);
+            Console.WriteLine("Ты прошел злоебучий лабиринт. Впереди ты видишь свет. Надо только расталкать несколько камней и продолжить путь.");
+            Console.WriteLine("Ты делаешь короткую передышку, пока есть время.");
+            Console.WriteLine("Нажми любую клавишу, чтобы продолжить свой путь.");
+            Console.ReadKey(true);
+            Console.Clear();
         }
     }
 }
