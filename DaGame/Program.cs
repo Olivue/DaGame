@@ -10,15 +10,16 @@ namespace DaGame
     internal class Program
     {
         static Random random = new Random();
-        public static bool SecondAttack = false;
-        public static bool ThirdAttack = false;
+        static int ExpCounter;
+        public static bool SecondAttack = true;
+        public static bool ThirdAttack = true;
        
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            DaBosss.Bosses();
-
+            Fight(3, 0, 0);
+            BossFight();
             Events.Trap();
             Events.Labyrinth();
 
@@ -52,7 +53,7 @@ namespace DaGame
             Items.ChooseItem("items");
             Items.ChooseItem("items");
             Items.ChooseItem("items");*/
-            Fight(3, 0, 0);
+            
 
             Fight(1, 0, 0);
             Items.ChooseItem("potions");
@@ -119,116 +120,7 @@ namespace DaGame
             Console.WriteLine("нажми на кнопочку для действия");
             while (enemy.enemies.Count > 0 & Hero.HP > 0)
             {
-                Console.WriteLine("");
-                Console.WriteLine("[атака - q] [статус - w] [чекнуть инвентарь - e]");
-                char input = Console.ReadKey(true).KeyChar;
-                if (input == 'q' || input == 'й')
-                {
-                    int attack = Hero.HeroAttack();
-                    if (Hero.secondAttMarker)
-                    {
-                        foreach (enemy enemy in enemy.enemies)
-                        {
-                            enemy.HP -= attack;
-                        }
-                        Console.WriteLine("Всем врагам нанесено " + attack + " урона");
-                        Hero.secondAttMarker = false;
-                    }
-                    else
-                    {
-                        if (enemy.enemies.Count == 1)
-                        {
-                            enemy.enemies[0].HP -= attack;
-                            Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[0].Name + " " + attack + " урона");
-                        }
-                        else
-                        {
-                            int numumber = InBattleEnemyChoose();
-                            if (numumber <= enemy.enemies.Count)
-                            {
-                                if (Hero.thirdAttMarker)
-                                {
-                                    double chance = random.NextDouble();
-                                    if (chance > 0.5)
-                                    {
-                                        enemy.enemies[numumber].HP -= attack / 2;
-                                        Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber].Name + " " + attack / 2 + " урона");
-                                    }
-                                    else
-                                    {
-                                        enemy.enemies[numumber].HP -= attack;
-                                        Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
-                                    }
-                                    Hero.thirdAttMarker = false;
-                                }
-                                else
-                                {
-                                    enemy.enemies[numumber].HP -= attack;
-                                    Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
-                                }
-                            }
-
-                        }
-                    }
-                    List<int> count = new List<int>();
-                    int e;
-                    foreach (enemy enemumy in enemy.enemies)
-                    {
-                        if (enemumy.PoisonCounter > 0)
-                        {
-                            enemumy.PoisonCounter--;
-                            enemumy.HP -= 3;
-                            Console.WriteLine(enemumy.Name + " нанесен урон ядом 3 ед.");
-                        }
-                        if (enemumy.StanCounter > 0)
-                        {
-                            enemumy.StanCounter--;
-                            Console.WriteLine(enemumy.Name + " обездвижен и не атакует");
-                        }
-                        else
-                        {
-                            if (enemumy.HP > 0)
-                            {
-                                Console.WriteLine(enemumy.Name + " атакует тебя в ответ");
-                                int EnemyAtack = enemy.EnemyAttack(enemumy.Name);
-                                if (Hero.Evasion())
-                                {
-                                    Console.WriteLine("упсеее вражина промахнулсии");
-                                }
-                                else
-                                {
-                                    Hero.HP -= EnemyAtack;
-                                    Console.WriteLine("Вражина нанес тебе " + EnemyAtack + " урона");
-                                }
-                            }
-                            else
-                            {
-                                e = enemy.enemies.IndexOf(enemumy);
-                                count.Add(e);
-                            }
-                        }
-                    }
-                    count.Reverse();
-                    foreach (int i in count)
-                    {
-                        Console.WriteLine(enemy.enemies[i].Name + " умирает");
-                        ExpCounter += enemy.enemies[i].Exp;
-                        enemy.enemies.RemoveAt(i);
-                    }
-                }
-                else if (input == 'w' || input == 'ц')
-                {
-                    foreach (enemy enemumy in enemy.enemies)
-                    {
-                        Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
-                    }
-                    Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе из " + Hero.MaxHP);
-                }
-                else if (input == 'e' || input == 'у')
-                {
-                    Hero.CheckInventory();
-                }
-                if (Hero.HP <= 0) Hero.LifeCheck();
+                FightActions();
             }
             Console.WriteLine("");
             if (Hero.HP <= 0)
@@ -257,6 +149,10 @@ namespace DaGame
                 Console.WriteLine(i + " " + enemy.Name + " (" + enemy.HP + " здоровья)");
                 i++;
             }
+            if (DaBosss.Boss.Any())
+            {
+                Console.WriteLine(i + " " + DaBosss.Boss[0].BossName + " (" + DaBosss.Boss[0].BossHP + " здоровья)");
+            }
             Console.WriteLine("");
             Console.WriteLine("Для атаки выбранного врага введите его номер:");
             string number = Console.ReadLine();
@@ -267,6 +163,147 @@ namespace DaGame
             }
             else return 500;
         }
+
+        static void FightActions()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("[атака - q] [статус - w] [чекнуть инвентарь - e]");
+            char input = Console.ReadKey(true).KeyChar;
+            if (input == 'q' || input == 'й')
+            {
+                int attack = Hero.HeroAttack();
+                if (Hero.secondAttMarker)
+                {
+                    foreach (enemy enemy in enemy.enemies)
+                    {
+                        enemy.HP -= attack;
+                    }
+                    if(DaBosss.Boss.Any()) DaBosss.Boss[0].BossHP -= attack;
+                    Console.WriteLine("Всем врагам нанесено " + attack + " урона");
+                    Hero.secondAttMarker = false;
+                }
+                else
+                {
+                    if (enemy.enemies.Count == 1 & !DaBosss.Boss.Any() || !enemy.enemies.Any() & DaBosss.Boss.Count == 1)
+                    {
+                        if (enemy.enemies.Count == 1)
+                        {
+                            enemy.enemies[0].HP -= attack;
+                            Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[0].Name + " " + attack + " урона");
+                        }                            
+                        if (DaBosss.Boss.Count == 1)
+                        {
+                            DaBosss.Boss[0].BossHP -= attack;
+                            Console.WriteLine(Hero.Name + " наносит врагу " + DaBosss.Boss[0].BossName + " " + attack + " урона");
+                        }  
+                    }
+                    else
+                    {
+                        int numumber = InBattleEnemyChoose();
+                        if (numumber <= enemy.enemies.Count + 1)
+                        {
+                            if(numumber <= enemy.enemies.Count)
+                            {
+                                if (Hero.thirdAttMarker)
+                                {
+                                    double chance = random.NextDouble();
+                                    if (chance > 0.5)
+                                    {
+                                        enemy.enemies[numumber].HP -= attack / 2;
+                                        Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber].Name + " " + attack / 2 + " урона");
+                                    }
+                                    else
+                                    {
+                                        enemy.enemies[numumber].HP -= attack;
+                                        Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
+                                    }
+                                    Hero.thirdAttMarker = false;
+                                }
+                                else
+                                {
+                                    enemy.enemies[numumber].HP -= attack;
+                                    Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        
+                    }
+                }
+                List<int> count = new List<int>();
+                int e;
+                foreach (enemy enemumy in enemy.enemies)
+                {
+                    if (enemumy.PoisonCounter > 0)
+                    {
+                        enemumy.PoisonCounter--;
+                        enemumy.HP -= 3;
+                        Console.WriteLine(enemumy.Name + " нанесен урон ядом 3 ед.");
+                    }
+                    if (enemumy.StanCounter > 0)
+                    {
+                        enemumy.StanCounter--;
+                        Console.WriteLine(enemumy.Name + " обездвижен и не атакует");
+                    }
+                    else
+                    {
+                        if (enemumy.HP > 0)
+                        {
+                            Console.WriteLine(enemumy.Name + " атакует тебя в ответ");
+                            int EnemyAtack = enemy.EnemyAttack(enemumy.Name);
+                            if (Hero.Evasion())
+                            {
+                                Console.WriteLine("упсеее вражина промахнулсии");
+                            }
+                            else
+                            {
+                                Hero.HP -= EnemyAtack;
+                                Console.WriteLine("Вражина нанес тебе " + EnemyAtack + " урона");
+                            }
+                        }
+                        else
+                        {
+                            e = enemy.enemies.IndexOf(enemumy);
+                            count.Add(e);
+                        }
+                    }
+                }
+                count.Reverse();
+                foreach (int i in count)
+                {
+                    Console.WriteLine(enemy.enemies[i].Name + " умирает");
+                    ExpCounter += enemy.enemies[i].Exp;
+                    enemy.enemies.RemoveAt(i);
+                }
+            }
+            else if (input == 'w' || input == 'ц')
+            {
+                foreach (enemy enemumy in enemy.enemies)
+                {
+                    Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
+                }
+                Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе из " + Hero.MaxHP);
+            }
+            else if (input == 'e' || input == 'у')
+            {
+                Hero.CheckInventory();
+            }
+            if (Hero.HP <= 0) Hero.LifeCheck();
+        }
+
+        static void BossFight()
+        {
+            DaBosss.Bosses();
+            for (int i = 0; i < 3; i++)
+            {
+                DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
+            }
+            Console.WriteLine(DaBosss.Boss[0].BossName);
+        }
+
         static void EndGame()
         {
             string deadHead = @"

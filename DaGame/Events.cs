@@ -227,6 +227,13 @@ namespace DaGame
             Console.WriteLine("ну чтож, сейчас будет пиздиловка");
             Console.WriteLine("тыркни чтоб начать пиздиловку");
             Console.ReadKey(true);
+            QTE(3);
+            Console.WriteLine("молодучень");
+        }
+        
+        public static void QTE(int howManyTimes)
+        {
+            Console.ReadKey(true);
 
             char[] qteChars = { 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c'};
             char randomChar;
@@ -235,17 +242,18 @@ namespace DaGame
             char tab;
             int checker;
 
-            while (true)
+            while (howManyTimes > 0)
             {
                 timer = new Timer(1000);
-                qte();
+                qteStarter();
                 timer.Dispose();
                 GC.Collect();
                 Console.WriteLine("ну теперь то конец?");
                 Console.ReadKey(true);
+                howManyTimes--;
             }
 
-            void qte()
+            void qteStarter()
             {
                 randomChar = qteChars[random.Next(qteChars.Length)];
                 i = 10;
