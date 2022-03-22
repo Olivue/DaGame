@@ -228,28 +228,36 @@ namespace DaGame
             Console.WriteLine("тыркни чтоб начать пиздиловку");
             Console.ReadKey(true);
 
-            char[] qte = { 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c'};
+            char[] qteChars = { 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c'};
             char randomChar;
-            
-            Timer timer = new Timer(1000);
+            Timer timer;
             int i;
             char tab;
+            int checker;
 
             while (true)
             {
-                randomChar = qte[random.Next(qte.Length)];
+                timer = new Timer(1000);
+                qte();
+                timer.Dispose();
+                GC.Collect();
+                Console.WriteLine("ну теперь то конец?");
+                Console.ReadKey(true);
+            }
+
+            void qte()
+            {
+                randomChar = qteChars[random.Next(qteChars.Length)];
                 i = 10;
-                while (i > 0)
+                checker = 1;
+                timer.Enabled = true;
+                do
                 {
                     tab = Console.ReadKey(true).KeyChar;
                     timer.Elapsed += Timer_Elapsed;
                     timer.Start();
-
                     Console.WriteLine("конец не конец?");
-                    
-
-                }
-                Console.ReadKey(true);
+                } while (checker == 1);                
             }
 
             void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -264,8 +272,7 @@ namespace DaGame
                 Console.WriteLine("                Нажми на кнопку:  " + randomChar);
                 Console.WriteLine("");
                 Console.WriteLine("=================================================");
-
-                if (i == 0)
+                if (i < 0)
                 {
                     Console.Clear();
                     Console.WriteLine("");
@@ -276,16 +283,14 @@ namespace DaGame
                     Console.WriteLine("==============================================");
 
                     timer.Close();
-                    timer.Dispose();
                 }
                 if (tab == randomChar || i == 0)
                 {
                     timer.Stop();
-                    timer.Dispose();
+                    timer.Close();
                     Console.WriteLine("pizka");
-                    //break;
-                }
-                GC.Collect();
+                    checker = 0;
+                }                
             }
         }
 
