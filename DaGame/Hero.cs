@@ -12,7 +12,7 @@ namespace DaGame
 
         public static string Name;
         public static int MaxHP = 50;
-        public static int HP = 10;
+        public static int HP = 50;
         public static int Attack = 5;
         public static int Exp;
         public static double HeroEvasion = 0.2;

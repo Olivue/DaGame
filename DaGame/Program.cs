@@ -18,7 +18,16 @@ namespace DaGame
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
-            Fight(3, 0, 0);
+            //Fight(3, 0, 0);
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
+            Items.ChooseItem("bombs");
             BossFight();
             Events.Trap();
             Events.Labyrinth();
@@ -149,10 +158,6 @@ namespace DaGame
                 Console.WriteLine(i + " " + enemy.Name + " (" + enemy.HP + " здоровья)");
                 i++;
             }
-            if (DaBosss.Boss.Any())
-            {
-                Console.WriteLine(i + " " + DaBosss.Boss[0].BossName + " (" + DaBosss.Boss[0].BossHP + " здоровья)");
-            }
             Console.WriteLine("");
             Console.WriteLine("Для атаки выбранного врага введите его номер:");
             string number = Console.ReadLine();
@@ -174,63 +179,35 @@ namespace DaGame
                 int attack = Hero.HeroAttack();
                 if (Hero.secondAttMarker)
                 {
+                    int i = 0;
                     foreach (enemy enemy in enemy.enemies)
                     {
-                        enemy.HP -= attack;
+                        TakeDamage(attack, i);
+                        i++;
                     }
-                    if(DaBosss.Boss.Any()) DaBosss.Boss[0].BossHP -= attack;
-                    Console.WriteLine("Всем врагам нанесено " + attack + " урона");
                     Hero.secondAttMarker = false;
                 }
                 else
                 {
-                    if (enemy.enemies.Count == 1 & !DaBosss.Boss.Any() || !enemy.enemies.Any() & DaBosss.Boss.Count == 1)
-                    {
-                        if (enemy.enemies.Count == 1)
-                        {
-                            enemy.enemies[0].HP -= attack;
-                            Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[0].Name + " " + attack + " урона");
-                        }                            
-                        if (DaBosss.Boss.Count == 1)
-                        {
-                            DaBosss.Boss[0].BossHP -= attack;
-                            Console.WriteLine(Hero.Name + " наносит врагу " + DaBosss.Boss[0].BossName + " " + attack + " урона");
-                        }  
-                    }
+                    if (enemy.enemies.Count == 1) TakeDamage(attack, 0);
                     else
                     {
                         int numumber = InBattleEnemyChoose();
-                        if (numumber <= enemy.enemies.Count + 1)
+                        if (numumber <= enemy.enemies.Count)
                         {
-                            if(numumber <= enemy.enemies.Count)
+                            if (Hero.thirdAttMarker)
                             {
-                                if (Hero.thirdAttMarker)
+                                double chance = random.NextDouble();
+                                if (chance > 0.5)
                                 {
-                                    double chance = random.NextDouble();
-                                    if (chance > 0.5)
-                                    {
-                                        enemy.enemies[numumber].HP -= attack / 2;
-                                        Console.WriteLine(Hero.Name + " промахивается и наносит врагу всего " + enemy.enemies[numumber].Name + " " + attack / 2 + " урона");
-                                    }
-                                    else
-                                    {
-                                        enemy.enemies[numumber].HP -= attack;
-                                        Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
-                                    }
-                                    Hero.thirdAttMarker = false;
+                                    Console.WriteLine(Hero.Name + " слабо замахнулся, удар сильным не получится.");
+                                    TakeDamage(attack / 2, numumber);                                    
                                 }
-                                else
-                                {
-                                    enemy.enemies[numumber].HP -= attack;
-                                    Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[numumber].Name + " " + attack + " урона");
-                                }
+                                else TakeDamage(attack, numumber);
+                                Hero.thirdAttMarker = false;
                             }
-                            else
-                            {
-
-                            }
-                        }
-                        
+                            else TakeDamage(attack, numumber);
+                        }                        
                     }
                 }
                 List<int> count = new List<int>();
@@ -294,6 +271,20 @@ namespace DaGame
             if (Hero.HP <= 0) Hero.LifeCheck();
         }
 
+        static void TakeDamage(int attack, int i)
+        {
+            double evasion = random.NextDouble();
+            if (enemy.enemies[i].SuperPower == 3 & enemy.enemies[i].StanCounter == 0 & evasion <= 0.8)
+            {
+                DaBosss.CoolAttacks[3]();
+            }
+            else
+            {
+                enemy.enemies[i].HP -= attack;
+                Console.WriteLine(Hero.Name + " наносит врагу " + enemy.enemies[i].Name + " " + attack + " урона");
+            }
+        }
+
         static void BossFight()
         {
             DaBosss.Bosses();
@@ -301,7 +292,10 @@ namespace DaGame
             {
                 DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
             }
+            enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack});
+            enemy.ChooseEnemy(1);
             Console.WriteLine(DaBosss.Boss[0].BossName);
+            Fight(0,0,0);
         }
 
         static void EndGame()

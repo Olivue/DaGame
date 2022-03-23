@@ -23,7 +23,10 @@ namespace DaGame
         public int Exp;
         public int PoisonCounter;
         public int StanCounter;
-        
+        public int SuperPower;
+        public string Picture;
+        public bool BossChecker;
+        public int Attack;
         static public void ChooseEnemy(int level)
         {
             if (level == 1)
@@ -45,7 +48,7 @@ namespace DaGame
                 enemyHP = random.Next(26, 46);
                 enemyExp = 15;
             }
-            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp, PoisonCounter = 0, StanCounter = 0 });
+            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp, PoisonCounter = 0, StanCounter = 0, BossChecker = false });
         }
 
         static public int EnemyAttack(string name)

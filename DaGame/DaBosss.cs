@@ -12,25 +12,18 @@ namespace DaGame
         public int BossMaxHP;
         public int BossHP;
         public int BossAttack;
+        public string BossImage;
         public int CoolAttackNumber;
         static Random random = new Random();
         static string[] Names = { "Красновострая виверна", "Углокрылая морозница", "Ядовзорный василиск", "Хвостопоглощающий змий" };
-        static List<Action> CoolAttacks = new List<Action>();
+        public static List<Action> CoolAttacks = new List<Action>() { SummonAttack, NegativeEffects, AutoHill, BossEvasion, QTE};
         public static List<DaBosss> Boss = new List<DaBosss>() {};
-
         public static void Bosses()
         {
-            CoolAttacks.Add(SummonAttack);
-            CoolAttacks.Add(NegativeEffects);
-            CoolAttacks.Add(AutoHill);
-            CoolAttacks.Add(BossEvasion);
-            CoolAttacks.Add(QTE);
-            //CoolAttacks[0]();
-
-            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0 });
-            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1 });
-            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2 });
-            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3 });
+            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0, BossImage = Wyvern });
+            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1, BossImage = Hellebore });
+            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2, BossImage = Basilisk });
+            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3, BossImage = Serpent });
         }
         static void SummonAttack()
         {
@@ -53,7 +46,8 @@ namespace DaGame
 
         static void BossEvasion()
         {
-
+            Console.WriteLine("Чудовище пытается извернуться и избежать твоей атаки");
+            Console.WriteLine("Оно изворачивается и ты промахиваешься");
         }
         static void QTE()
         {
