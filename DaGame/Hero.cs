@@ -13,13 +13,15 @@ namespace DaGame
         public static string Name;
         public static int MaxHP = 50;
         public static int HP = 50;
-        public static int Attack = 5;
+        public static int Attack = 10;
         public static int Exp;
         public static double HeroEvasion = 0.2;
         public static double HeroCrit = 0.05;
         static double Riser;
         public static bool secondAttMarker;
         public static bool thirdAttMarker;
+        public static int DebaffCounter = 0;
+        public static int PoisonCounter = 0;
 
         public static List<string> Inventory = new List<string>();
         public static List<string> Equip = new List<string>();
@@ -163,7 +165,11 @@ namespace DaGame
                     Riser += item.ItemValue;
                 }
             }
-            if (crit <= HeroCrit + Riser) return critAtt;
+            if (crit <= HeroCrit + Riser) 
+            {
+                Console.WriteLine(Name + " наносит критический урон");
+                return critAtt; 
+            }
             else return 0;
         }
     }

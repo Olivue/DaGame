@@ -18,6 +18,7 @@ namespace DaGame
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
+            Events.SPR();
             //Fight(3, 0, 0);
             Items.ChooseItem("bombs");
             Items.ChooseItem("bombs");
@@ -28,6 +29,7 @@ namespace DaGame
             Items.ChooseItem("bombs");
             Items.ChooseItem("bombs");
             Items.ChooseItem("bombs");
+            Hero.DebaffCounter = 3;
             BossFight();
             Events.Trap();
             Events.Labyrinth();
@@ -103,9 +105,14 @@ namespace DaGame
             Fight(2, 0, 1);
             Fight(0, 2, 1);
 
+            if (FinalBattleCheck())
+            {
+                FinalBattle();
+            }
+            else FinishTheGame();
+
             Console.ReadKey();
         }
-
         static void Fight(int firstLevel, int secondLevel, int thirdLevel)
         {
             int ExpCounter = 0;
@@ -176,7 +183,20 @@ namespace DaGame
             char input = Console.ReadKey(true).KeyChar;
             if (input == 'q' || input == 'й')
             {
+                if(Hero.PoisonCounter != 0)
+                {
+                    Hero.HP -= Items.PoisonDamage;
+                    Hero.PoisonCounter--;
+                    Console.WriteLine(Hero.Name + " получает урон ядом " + Items.PoisonDamage + " ед.");
+                }
                 int attack = Hero.HeroAttack();
+                Console.WriteLine(attack);                                            //check
+                if(Hero.DebaffCounter != 0)
+                {
+                    attack -= attack / 2;
+                    Console.WriteLine("Из-за невыносимой слабости в мышцах, в твоих атаках меньше силы и ты промахиваешься мимо наиболее уязвимых точек");
+                    Hero.DebaffCounter--;
+                }
                 if (Hero.secondAttMarker)
                 {
                     int i = 0;
@@ -217,28 +237,47 @@ namespace DaGame
                     if (enemumy.PoisonCounter > 0)
                     {
                         enemumy.PoisonCounter--;
-                        enemumy.HP -= 3;
-                        Console.WriteLine(enemumy.Name + " нанесен урон ядом 3 ед.");
+                        enemumy.HP -= Items.PoisonDamage;
+                        Console.WriteLine(enemumy.Name + " получает урон ядом " + Items.PoisonDamage + " ед.");
                     }
                     if (enemumy.StanCounter > 0)
                     {
                         enemumy.StanCounter--;
                         Console.WriteLine(enemumy.Name + " обездвижен и не атакует");
+                        enemumy.SuperPowerCounter = 0;
                     }
                     else
                     {
                         if (enemumy.HP > 0)
                         {
-                            Console.WriteLine(enemumy.Name + " атакует тебя в ответ");
-                            int EnemyAtack = enemy.EnemyAttack(enemumy.Name);
-                            if (Hero.Evasion())
+                            if(enemumy.BossChecker & enemumy.SuperPower != 3 & enemumy.SuperPowerCounter > 1 )
                             {
-                                Console.WriteLine("упсеее вражина промахнулсии");
+                                if(enemumy.SuperPowerCounter == 2)
+                                {
+                                    Console.WriteLine(enemumy.Name + " начинает подготовку к особой атаке");
+                                    enemumy.SuperPowerCounter++;
+                                }
+                                else
+                                {
+                                    DaBosss.CoolAttacks[enemumy.SuperPower]();
+                                    enemumy.SuperPowerCounter = 0;
+                                    break;
+                                }
                             }
                             else
                             {
-                                Hero.HP -= EnemyAtack;
-                                Console.WriteLine("Вражина нанес тебе " + EnemyAtack + " урона");
+                                Console.WriteLine(enemumy.Name + " атакует в ответ");                                
+                                if (Hero.Evasion())
+                                {
+                                    Console.WriteLine("Враг пытается атаковать, но " + Hero.Name + " ловко уворачивается");
+                                }
+                                else
+                                {
+                                    int EnemyAtack = enemy.EnemyAttack(enemumy.enemyLVL, enemumy.BossChecker, enemumy.Attack);
+                                    Hero.HP -= EnemyAtack;
+                                    Console.WriteLine("Враг попадает и наносит " + EnemyAtack + " урона");
+                                }
+                                enemumy.SuperPowerCounter++;
                             }
                         }
                         else
@@ -292,10 +331,34 @@ namespace DaGame
             {
                 DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
             }
-            enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack});
+            enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack, SuperPowerCounter = 0, MaxHP = DaBosss.Boss[0].BossMaxHP});
             enemy.ChooseEnemy(1);
-            Console.WriteLine(DaBosss.Boss[0].BossName);
+            Console.WriteLine(DaBosss.Boss[0].BossName); //checker
             Fight(0,0,0);
+            Console.WriteLine("Тело монстра бездвижно падает перед тобой, ты осматриваешь тело. При касании у тебя в голове всплывает картина");
+            Console.WriteLine(DaBosss.Boss[0].BossHint);
+            DaBosss.Boss.RemoveAt(0);
+        }
+
+        static bool FinalBattleCheck()
+        {
+            Console.WriteLine("Недалеко от тела ты находишь яйцо. Оно выглядит странно, будто прозрачно. Ты берешь яйцо в руки, оно едва ощущается. Тебе кажется, что сущность внутри чего-то ждет. Несмотря на свою беззащитность оно излучает угрозу. Тебе хочется что-то донести до существа внутри. Но что?");
+            Console.WriteLine("Введи свое послание существу в яйце");
+            string message = Console.ReadLine();
+            if(message == "anus" || message == "анус") return true;                         // поменяй пожожда
+            else return false;
+        }
+        static void FinalBattle()
+        {
+
+        }
+        private static void FinishTheGame()
+        {
+            Console.WriteLine("После твоих слов существо в яйце будто теряет к тебе интерес. Ты чувствуешь как полупрозрачная субстанция просачивается сквозь твои пальцы. Яйцо быстро исчезает из твоих рук");
+            Console.WriteLine("Спасибо за игру)");
+            Console.WriteLine("Возвращайся, чтобы раскрыть оставшиеся тайны этого мира");
+            Console.WriteLine("Нажми любую кнопку, чтобы выйти");
+            Console.ReadKey();
         }
 
         static void EndGame()

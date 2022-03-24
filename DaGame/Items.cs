@@ -25,6 +25,10 @@ namespace DaGame
         static public string ChosenItem;
         static public string ChosenAttribute;
         static public double AttributeValue;
+        public readonly static int PoisonDamage = 3;
+        static readonly public int BombDamage = 10;
+        static readonly public int HPPotion = 5;
+        static readonly public int StrongHPPotion = 15;
 
         static public void ChooseItem(string ItemType)
         {
@@ -35,9 +39,9 @@ namespace DaGame
                 Console.WriteLine("В твой инвентарь добавлено " + ChosenItem);
                 if (ChosenItem == "Зелье лечения")
                 {
-                    Console.WriteLine(ChosenItem + " восстанавливает 5HP");
+                    Console.WriteLine(ChosenItem + " восстанавливает " + HPPotion + "HP");
                 }
-                else Console.WriteLine(ChosenItem + " восстанавливает 15HP");
+                else Console.WriteLine(ChosenItem + " восстанавливает " + StrongHPPotion + "HP");
 
                 Console.WriteLine("");
             }
@@ -61,7 +65,7 @@ namespace DaGame
                     foreach (Items items in Hero.Equipment)
                     {
                         counter++;
-                        Console.WriteLine("проверка предмета " + items.ItemName);
+                        //Console.WriteLine("проверка предмета " + items.ItemName);
                         if (items.ItemName == ChosenItem)
                         {
                             checker++;
@@ -111,11 +115,11 @@ namespace DaGame
                 Console.WriteLine("В твой инвентарь добавлена " + ChosenItem);
                 if (ChosenItem == "Бомба")
                 {
-                    Console.WriteLine(ChosenItem + " наносит всем врагам 10 единиц урона");
+                    Console.WriteLine(ChosenItem + " наносит всем врагам " + BombDamage + " единиц урона");
                 }
                 else if (ChosenItem == "Ядовитая бомба")
                 {
-                    Console.WriteLine(ChosenItem + " наносит 3 единицы урона выбранному врагу 3 хода");
+                    Console.WriteLine(ChosenItem + " наносит " + PoisonDamage + " единицы урона выбранному врагу 3 хода");
                 }
                 else Console.WriteLine(ChosenItem + " оглушает выбранного врага на 3 хода");
 
@@ -153,34 +157,34 @@ namespace DaGame
         {
             if(ItemName == "Зелье лечения")
             {
-                Console.WriteLine(Hero.Name + " использует зелье лечения и восстанавливает 5HP");
-                Hero.HP += 5;
+                Console.WriteLine(Hero.Name + " использует зелье лечения и восстанавливает " + HPPotion + "HP");
+                Hero.HP += HPPotion;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", зелье лечения удалено из инвентаря");
             }
             else if(ItemName == "Сильное зелье лечения")
             {
-                Console.WriteLine(Hero.Name + " использует сильное зелье лечения и восстанавливает 15HP");
-                Hero.HP += 15;
+                Console.WriteLine(Hero.Name + " использует сильное зелье лечения и восстанавливает " + StrongHPPotion + "HP");
+                Hero.HP += StrongHPPotion;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", сильное зелье лечения удалено из инвентаря");
             }
             else if (ItemName == "Бомба")
             {
-                Console.WriteLine(Hero.Name + " использует бомбу и наносит всем врагам 7 единиц урона");
+                Console.WriteLine(Hero.Name + " использует бомбу и наносит всем врагам " + BombDamage + " единиц урона");
                 foreach (enemy enemumy in enemy.enemies)
                 {
-                    enemumy.HP -= 7;
+                    enemumy.HP -= BombDamage;
                 }
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", бомба удалена из инвентаря");
             }
             else if (ItemName == "Ядовитая бомба")
             {
-                Console.WriteLine(Hero.Name + " использует ядовитую бомбу и наносит 3 единицы урона выбранному врагу 3 хода");
+                Console.WriteLine(Hero.Name + " использует ядовитую бомбу и наносит " + PoisonDamage + " единицы урона выбранному врагу 3 хода");
                 int i = Program.InBattleEnemyChoose();
                 enemy.enemies[i].PoisonCounter = 2;
-                enemy.enemies[i].HP -= 3;
+                enemy.enemies[i].HP -= PoisonDamage;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", ядовитая бомба удалена из инвентаря");
             }

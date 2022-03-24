@@ -13,41 +13,70 @@ namespace DaGame
         public int BossHP;
         public int BossAttack;
         public string BossImage;
+        public string BossHint;
         public int CoolAttackNumber;
         static Random random = new Random();
         static string[] Names = { "Красновострая виверна", "Углокрылая морозница", "Ядовзорный василиск", "Хвостопоглощающий змий" };
+        static string[] Hints = { "а", "н", "у", "с" };
         public static List<Action> CoolAttacks = new List<Action>() { SummonAttack, NegativeEffects, AutoHill, BossEvasion, QTE};
         public static List<DaBosss> Boss = new List<DaBosss>() {};
         public static void Bosses()
         {
-            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0, BossImage = Wyvern });
-            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1, BossImage = Hellebore });
-            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2, BossImage = Basilisk });
-            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3, BossImage = Serpent });
+            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0, BossHint = Hints[0], BossImage = Wyvern });
+            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1, BossHint = Hints[1], BossImage = Hellebore });
+            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2, BossHint = Hints[2], BossImage = Basilisk });
+            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3, BossHint = Hints[3], BossImage = Serpent });
         }
         static void SummonAttack()
         {
+            int rockAttack = random.Next(2, 9);
+            Console.WriteLine("Враг задирает голову, и на всю округу раздается громогласный рев. Воздух дрожит. В рябящем воздухе появлсяются вполохи света. Когда они рассеиваюся, на их месте остается подкрепление.");
+            Console.WriteLine("Звуковой волной тебя отбрасывает и ты ударяешься о землю, едва успевая сгруппироваться, чтобы не сломать конечности об острые камни.");
+            Hero.HP -= rockAttack;
+            Console.WriteLine("При ударе о землю ты получаешь " + rockAttack + " урона");
             int count = random.Next(1,4);
             for (int i = 0; i < count; i++)
 			{
                 enemy.ChooseEnemy(1);
-			}            
+			}
+            Console.WriteLine("Теперь перед тобой:");
+            foreach (enemy enemy in enemy.enemies)
+            {
+                Console.WriteLine(enemy.Name + " (" + enemy.HP + " здоровья)");
+            }
         }
 
         static void NegativeEffects()
         {
-
+            Console.WriteLine("Чудовище начинает звучно сопеть и подмахивать крыльями. Дым начинает выходить из раздувающихся ноздрей. Гонимый взмахами крыльев он быстро подбирается к твоим ногам и начинает обволакивать, поднимаясь выше и выше. Ты чувствуешь слабость");
+            Console.WriteLine("Хватка слабеет, руки тяжелеют. Ты понимаешь, что не сможешь сражаться с прежней силой. Из носа капают капли крови. Этот дым отравлен!");
+            Hero.DebaffCounter = 5;
+            Hero.PoisonCounter = 3;
+            Hero.HP -= Items.PoisonDamage;
+            Console.WriteLine(Hero.Name + " получает урон ядом " + Items.PoisonDamage + " ед.");
         }
 
         static void AutoHill()
         {
-
+            int HPExchange = random.Next(10, 19);
+            Hero.HP -= HPExchange;
+            foreach(enemy enemy in enemy.enemies)
+            {
+                if (enemy.BossChecker)
+                {
+                    enemy.HP += HPExchange;
+                    if (enemy.MaxHP < enemy.HP) enemy.HP = enemy.MaxHP;
+                }
+            }
+            Console.WriteLine("Чудовище резко начинает смотреть тебе прямо в глаза. Его пасть открывается. Ты слышишь тихое шипение. Ты хочешь напасть, но не можешь отвести взгляд.");
+            Console.WriteLine("Шипение действует на тебя успокаивающее. Ты приходишь в себя и усилием воли стряхаешь с себя оцепенение, только когда чувствуешь как теряешь сознание, а жизнь будто утекает сквозь пальцы");
+            Console.WriteLine("Монстр крадет " + HPExchange + " здоровья и восстанавливает свои силы");
         }
 
         static void BossEvasion()
         {
             Console.WriteLine("Чудовище пытается извернуться и избежать твоей атаки");
-            Console.WriteLine("Оно изворачивается и ты промахиваешься");
+            Console.WriteLine("Оно уходит от удара в последний момент");
         }
         static void QTE()
         {
@@ -72,7 +101,7 @@ namespace DaGame
           \  `/`         ;:;  ~._,=~`   `~=,
            \_|      (        ^     ^  ^ _^  \
              \    _,`      / ^ ^  ^   .' `.^ ;
-    <`-.  jgs '-;`       /`  ^   ^  /\    ) ^/
+    <`-.      '-;`       /`  ^   ^  /\    ) ^/
     <'- \__..-'` ___,,,-'._ ^  ^ _.'\^`'-' ^/
      `)_   ..-''`          `~~~~`    `~===~`
      <_.-`-._\
