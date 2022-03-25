@@ -27,6 +27,7 @@ namespace DaGame
         public int SuperPower;
         public string Picture;
         public bool BossChecker;
+        public bool FinalBossChecker;
         public int Attack;
         public int SuperPowerCounter;
         public int MaxHP;

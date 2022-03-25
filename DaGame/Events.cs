@@ -402,10 +402,7 @@ namespace DaGame
 
             bool WallChecker(int x, int y)
             {
-                if (x < 0 || y < 0 || x >= cols || y >= rows)
-                {
-                    return false;
-                }
+                if (x < 0 || y < 0 || x >= cols || y >= rows) return false;
                 return grid[y, x] == " " || grid[y, x] == "X" || grid[y, x] == "V" || grid[y, x] == "Ф";
             }
             

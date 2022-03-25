@@ -18,6 +18,7 @@ namespace DaGame
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
+            FinalBattle();
             Events.SPR();
             //Fight(3, 0, 0);
             Items.ChooseItem("bombs");
@@ -105,44 +106,22 @@ namespace DaGame
             Fight(2, 0, 1);
             Fight(0, 2, 1);
 
-            if (FinalBattleCheck())
-            {
-                FinalBattle();
-            }
+            if (FinalBattleCheck()) FinalBattle();
             else FinishTheGame();
-
-            Console.ReadKey();
+            FinishTheGame();
         }
         static void Fight(int firstLevel, int secondLevel, int thirdLevel)
         {
             int ExpCounter = 0;
-            for (int i = 0; i < firstLevel; i++)
-            {
-                enemy.ChooseEnemy(1);
-            }
-            for (int i = 0; i < secondLevel; i++)
-            {
-                enemy.ChooseEnemy(2);
-            }
-            for(int i = 0; i < thirdLevel; i++)
-            {
-                enemy.ChooseEnemy(3);
-            }
+            for (int i = 0; i < firstLevel; i++) enemy.ChooseEnemy(1);
+            for (int i = 0; i < secondLevel; i++) enemy.ChooseEnemy(2);
+            for(int i = 0; i < thirdLevel; i++) enemy.ChooseEnemy(3);
             Console.WriteLine(Hero.Name + " столкнулся с:");
-            foreach (enemy enemumy in enemy.enemies)
-            {
-                Console.WriteLine(enemumy.Name + " с " + enemumy.HP + " здоровья");
-            }
+            foreach (enemy enemumy in enemy.enemies) Console.WriteLine(enemumy.Name + " с " + enemumy.HP + " здоровья");
             Console.WriteLine("нажми на кнопочку для действия");
-            while (enemy.enemies.Count > 0 & Hero.HP > 0)
-            {
-                FightActions();
-            }
+            while (enemy.enemies.Count > 0 & Hero.HP > 0) FightActions();
             Console.WriteLine("");
-            if (Hero.HP <= 0)
-            {
-                EndGame();
-            }
+            if (Hero.HP <= 0) EndGame();
             else
             {
                 Hero.Exp += ExpCounter;
@@ -151,12 +130,12 @@ namespace DaGame
                 Console.WriteLine("Теперь у тебя " + Hero.Exp + " опыта");
                 Console.WriteLine("");
             }
-            if (Hero.Exp == 20)
+            if (Hero.Exp == 20)          // допилить
             {
                 Hero.LevelUp();                
             }
         }
-        public static int InBattleEnemyChoose()
+        public static int InBattleEnemyChoose()            // готово
         {
             Console.WriteLine("Выберите врага для атаки:");
             int i = 1;
@@ -167,13 +146,12 @@ namespace DaGame
             }
             Console.WriteLine("");
             Console.WriteLine("Для атаки выбранного врага введите его номер:");
-            string number = Console.ReadLine();
-            if (number == "")  return 500;
-            if (int.TryParse(number, out int numumber))
+            while (true)
             {
-                return numumber - 1;
+                string number = Console.ReadLine();
+                if (int.TryParse(number, out int numumber) & numumber > 0 & numumber <= i) return numumber - 1;
+                else Console.WriteLine("Здесь нет такого врага");
             }
-            else return 500;
         }
 
         static void FightActions()
@@ -190,7 +168,7 @@ namespace DaGame
                     Console.WriteLine(Hero.Name + " получает урон ядом " + Items.PoisonDamage + " ед.");
                 }
                 int attack = Hero.HeroAttack();
-                Console.WriteLine(attack);                                            //check
+                //Console.WriteLine(attack);                                            //check
                 if(Hero.DebaffCounter != 0)
                 {
                     attack -= attack / 2;
@@ -267,10 +245,7 @@ namespace DaGame
                             else
                             {
                                 Console.WriteLine(enemumy.Name + " атакует в ответ");                                
-                                if (Hero.Evasion())
-                                {
-                                    Console.WriteLine("Враг пытается атаковать, но " + Hero.Name + " ловко уворачивается");
-                                }
+                                if (Hero.Evasion()) Console.WriteLine("Враг пытается атаковать, но " + Hero.Name + " ловко уворачивается");
                                 else
                                 {
                                     int EnemyAtack = enemy.EnemyAttack(enemumy.enemyLVL, enemumy.BossChecker, enemumy.Attack);
@@ -297,26 +272,17 @@ namespace DaGame
             }
             else if (input == 'w' || input == 'ц')
             {
-                foreach (enemy enemumy in enemy.enemies)
-                {
-                    Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
-                }
+                foreach (enemy enemumy in enemy.enemies) Console.WriteLine(enemumy.Name + " все еще существует с " + enemumy.HP + " очками здоровья");
                 Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе из " + Hero.MaxHP);
             }
-            else if (input == 'e' || input == 'у')
-            {
-                Hero.CheckInventory();
-            }
+            else if (input == 'e' || input == 'у') Hero.CheckInventory();
             if (Hero.HP <= 0) Hero.LifeCheck();
         }
 
         static void TakeDamage(int attack, int i)
         {
             double evasion = random.NextDouble();
-            if (enemy.enemies[i].SuperPower == 3 & enemy.enemies[i].StanCounter == 0 & evasion <= 0.8)
-            {
-                DaBosss.CoolAttacks[3]();
-            }
+            if (enemy.enemies[i].SuperPower == 3 & enemy.enemies[i].StanCounter == 0 & evasion <= 0.8) DaBosss.CoolAttacks[3]();
             else
             {
                 enemy.enemies[i].HP -= attack;
@@ -327,13 +293,10 @@ namespace DaGame
         static void BossFight()
         {
             DaBosss.Bosses();
-            for (int i = 0; i < 3; i++)
-            {
-                DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
-            }
+            for (int i = 0; i < 3; i++) DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
             enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack, SuperPowerCounter = 0, MaxHP = DaBosss.Boss[0].BossMaxHP});
             enemy.ChooseEnemy(1);
-            Console.WriteLine(DaBosss.Boss[0].BossName); //checker
+            //Console.WriteLine(DaBosss.Boss[0].BossName); //checker
             Fight(0,0,0);
             Console.WriteLine("Тело монстра бездвижно падает перед тобой, ты осматриваешь тело. При касании у тебя в голове всплывает картина");
             Console.WriteLine(DaBosss.Boss[0].BossHint);
@@ -345,20 +308,32 @@ namespace DaGame
             Console.WriteLine("Недалеко от тела ты находишь яйцо. Оно выглядит странно, будто прозрачно. Ты берешь яйцо в руки, оно едва ощущается. Тебе кажется, что сущность внутри чего-то ждет. Несмотря на свою беззащитность оно излучает угрозу. Тебе хочется что-то донести до существа внутри. Но что?");
             Console.WriteLine("Введи свое послание существу в яйце");
             string message = Console.ReadLine();
-            if(message == "anus" || message == "анус") return true;                         // поменяй пожожда
-            else return false;
+            if (message == "anus" || message == "анус") return true;                         // поменяй пожожда
+            else
+            {
+                Console.WriteLine("После твоих слов существо в яйце будто теряет к тебе интерес. Ты чувствуешь как полупрозрачная субстанция просачивается сквозь твои пальцы. Яйцо быстро исчезает из твоих рук");
+                Console.WriteLine("Тебе кажется, что ты что-то упустил. Немного разочарованный ты решаешь спуститься к деревне и перевести дух, а после продолжить свои странствия");
+                return false;
+            }
         }
         static void FinalBattle()
         {
-
+            Console.WriteLine("гром гремит, кусты трясутся, вылезает глав гад");
+            Console.ReadKey(true);
+            DaBosss.BornAnimation();
+            
         }
         private static void FinishTheGame()
         {
-            Console.WriteLine("После твоих слов существо в яйце будто теряет к тебе интерес. Ты чувствуешь как полупрозрачная субстанция просачивается сквозь твои пальцы. Яйцо быстро исчезает из твоих рук");
+            Console.WriteLine("");
             Console.WriteLine("Спасибо за игру)");
             Console.WriteLine("Возвращайся, чтобы раскрыть оставшиеся тайны этого мира");
+
+            // добавь красивую картиночку
+
             Console.WriteLine("Нажми любую кнопку, чтобы выйти");
             Console.ReadKey();
+            Environment.Exit(0);
         }
 
         static void EndGame()

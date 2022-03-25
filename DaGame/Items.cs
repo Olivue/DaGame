@@ -37,12 +37,8 @@ namespace DaGame
                 ChosenItem = potions[random.Next(potions.Length)];
                 Hero.Inventory.Add(ChosenItem);
                 Console.WriteLine("В твой инвентарь добавлено " + ChosenItem);
-                if (ChosenItem == "Зелье лечения")
-                {
-                    Console.WriteLine(ChosenItem + " восстанавливает " + HPPotion + "HP");
-                }
+                if (ChosenItem == "Зелье лечения") Console.WriteLine(ChosenItem + " восстанавливает " + HPPotion + "HP");
                 else Console.WriteLine(ChosenItem + " восстанавливает " + StrongHPPotion + "HP");
-
                 Console.WriteLine("");
             }
             else if (ItemType == "items")
@@ -96,7 +92,6 @@ namespace DaGame
                                 break;
                             }
                         }
-
                     }
                     else
                     {
@@ -113,16 +108,9 @@ namespace DaGame
                 ChosenItem = bombs[random.Next(bombs.Length)];
                 Hero.Inventory.Add(ChosenItem);
                 Console.WriteLine("В твой инвентарь добавлена " + ChosenItem);
-                if (ChosenItem == "Бомба")
-                {
-                    Console.WriteLine(ChosenItem + " наносит всем врагам " + BombDamage + " единиц урона");
-                }
-                else if (ChosenItem == "Ядовитая бомба")
-                {
-                    Console.WriteLine(ChosenItem + " наносит " + PoisonDamage + " единицы урона выбранному врагу 3 хода");
-                }
+                if (ChosenItem == "Бомба") Console.WriteLine(ChosenItem + " наносит всем врагам " + BombDamage + " единиц урона");
+                else if (ChosenItem == "Ядовитая бомба") Console.WriteLine(ChosenItem + " наносит " + PoisonDamage + " единицы урона выбранному врагу 3 хода");
                 else Console.WriteLine(ChosenItem + " оглушает выбранного врага на 3 хода");
-
                 Console.WriteLine("");
             }
         }
@@ -131,26 +119,11 @@ namespace DaGame
         {
             ChosenAttribute = properties[random.Next(properties.Length)];
 
-            if (ChosenAttribute == "уворота")
-            {
-                AttributeValue = random.Next(10, 31) / 100D;
-            }
-            else if (ChosenAttribute == "здоровья")
-            {
-                AttributeValue = random.Next(3, 13);
-            }
-            else if (ChosenAttribute == "атаки")
-            {
-                AttributeValue = random.Next(1, 9);
-            }
-            else if (ChosenAttribute == "критического урона")
-            {
-                AttributeValue = random.Next(5, 16) / 100D;
-            }
-            else if (ChosenAttribute == "жизни")
-            {
-                AttributeValue = 1;
-            }
+            if (ChosenAttribute == "уворота") AttributeValue = random.Next(10, 31) / 100D;
+            else if (ChosenAttribute == "здоровья") AttributeValue = random.Next(3, 13);
+            else if (ChosenAttribute == "атаки") AttributeValue = random.Next(1, 9);
+            else if (ChosenAttribute == "критического урона") AttributeValue = random.Next(5, 16) / 100D;
+            else if (ChosenAttribute == "жизни") AttributeValue = 1;
         }
 
         static public void UseItem(string ItemName)
@@ -172,10 +145,7 @@ namespace DaGame
             else if (ItemName == "Бомба")
             {
                 Console.WriteLine(Hero.Name + " использует бомбу и наносит всем врагам " + BombDamage + " единиц урона");
-                foreach (enemy enemumy in enemy.enemies)
-                {
-                    enemumy.HP -= BombDamage;
-                }
+                foreach (enemy enemumy in enemy.enemies) enemumy.HP -= BombDamage;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", бомба удалена из инвентаря");
             }
