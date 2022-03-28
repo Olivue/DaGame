@@ -19,6 +19,7 @@ namespace DaGame
             Console.SetWindowSize(120, 45);
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
+            Events.Trap();
             FinalBattle();
             Events.SPR();
             //Fight(3, 0, 0);

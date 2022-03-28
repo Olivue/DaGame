@@ -236,6 +236,7 @@ namespace DaGame
             Console.ReadKey(true);
 
             char[] qteChars = { 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c'};
+            char[] qteRuChars = { 'й', 'ц', 'у', 'ф', 'ы', 'в', 'я', 'ч', 'с' };
             char randomChar;
             Timer timer;
             int i;
@@ -291,6 +292,11 @@ namespace DaGame
                     Console.WriteLine("==============================================");
 
                     timer.Close();
+                }
+                if(qteRuChars.Contains(tab))
+                {
+                    int number = Array.IndexOf(qteRuChars, tab);
+                    tab = qteChars[number];
                 }
                 if (tab == randomChar || i == 0)
                 {
