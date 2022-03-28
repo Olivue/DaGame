@@ -12,7 +12,7 @@ namespace DaGame
 
         public static string Name;
         public static int MaxHP = 50;
-        public static int HP = 50;
+        public static int HP = 500;
         public static int Attack = 10;
         public static int Exp;
         public static double HeroEvasion = 0.2;
@@ -26,17 +26,22 @@ namespace DaGame
         public static List<string> Inventory = new List<string>();
         public static List<string> Equip = new List<string>();
         public static List<Items> Equipment = new List<Items>();
+        static List<int> level = new List<int> { 20, 50, 100, 200 };
 
         public static void LevelUp()
         {
-            MaxHP += 5;
-            Attack += 2;
-            Console.WriteLine("Ты достигаешь нового уровня!");
-            Console.WriteLine("Максимальное колличество здоровья и атаки увеличено!");
-            Console.WriteLine("MaxHP = " + MaxHP + ", Attack = " + Attack);
-            Console.WriteLine("Твое здоровье восстановленно!");
-            Console.WriteLine("");
-            HP = MaxHP;
+            if(Hero.Exp >= level[0])
+            {
+                MaxHP += 5;
+                Attack += 2;
+                Console.WriteLine("Ты достигаешь нового уровня!");
+                Console.WriteLine("Максимальное колличество здоровья и атаки увеличено!");
+                Console.WriteLine("MaxHP = " + MaxHP + ", Attack = " + Attack);
+                Console.WriteLine("Твое здоровье восстановленно!");
+                Console.WriteLine("");
+                HP = MaxHP;
+                level.RemoveAt(0);
+            }
         }
 
         public static bool Evasion() ///gotovo

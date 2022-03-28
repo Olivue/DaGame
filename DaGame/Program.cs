@@ -16,6 +16,7 @@ namespace DaGame
        
         static void Main(string[] args)
         {
+            Console.SetWindowSize(120, 45);
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.Unicode;
             FinalBattle();
@@ -130,10 +131,7 @@ namespace DaGame
                 Console.WriteLine("Теперь у тебя " + Hero.Exp + " опыта");
                 Console.WriteLine("");
             }
-            if (Hero.Exp == 20)          // допилить
-            {
-                Hero.LevelUp();                
-            }
+            Hero.LevelUp();
         }
         public static int InBattleEnemyChoose()            // готово
         {
@@ -276,7 +274,8 @@ namespace DaGame
                 Console.WriteLine(Hero.Name + ", у тебя сейчас " + Hero.HP + " хепе из " + Hero.MaxHP);
             }
             else if (input == 'e' || input == 'у') Hero.CheckInventory();
-            if (Hero.HP <= 0) Hero.LifeCheck();
+            foreach (enemy enemy in enemy.enemies) if (enemy.FinalBossChecker) DaBosss.FinalBossBattle(enemy.Name.IndexOf(enemy.Name));
+            if (Hero.HP <= 0) Hero.LifeCheck();            
         }
 
         static void TakeDamage(int attack, int i)
@@ -294,7 +293,7 @@ namespace DaGame
         {
             DaBosss.Bosses();
             for (int i = 0; i < 3; i++) DaBosss.Boss.RemoveAt(random.Next(DaBosss.Boss.Count));
-            enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack, SuperPowerCounter = 0, MaxHP = DaBosss.Boss[0].BossMaxHP});
+            enemy.enemies.Add(new enemy() { Name = DaBosss.Boss[0].BossName, HP = DaBosss.Boss[0].BossHP, Exp = 50, PoisonCounter = 0, StanCounter = 0, BossChecker = true, FinalBossChecker = false, SuperPower = DaBosss.Boss[0].CoolAttackNumber, Picture = DaBosss.Boss[0].BossImage, Attack = DaBosss.Boss[0].BossAttack, SuperPowerCounter = 0, MaxHP = DaBosss.Boss[0].BossMaxHP});
             enemy.ChooseEnemy(1);
             //Console.WriteLine(DaBosss.Boss[0].BossName); //checker
             Fight(0,0,0);
@@ -316,14 +315,17 @@ namespace DaGame
                 return false;
             }
         }
-        static void FinalBattle()
+        static void FinalBattle()  // in process
         {
             Console.WriteLine("гром гремит, кусты трясутся, вылезает глав гад");
             Console.ReadKey(true);
             DaBosss.BornAnimation();
-            
+            enemy.enemies.Add(new enemy() { Name = DaBosss.FinalBossName, HP = DaBosss.FinalBossHP, PoisonCounter = 0, StanCounter = 0, BossChecker = true, FinalBossChecker = true, SuperPower = 2, Attack = 10, SuperPowerCounter = 0, MaxHP = DaBosss.FinalBossHP });
+            Fight(0,0,0);
+            Console.WriteLine("Побежда");
+            EndGame();
         }
-        private static void FinishTheGame()
+        public static void FinishTheGame()
         {
             Console.WriteLine("");
             Console.WriteLine("Спасибо за игру)");
@@ -369,7 +371,7 @@ namespace DaGame
             Console.WriteLine("> > > ИГРА ОКОНЧЕНА < < <");
             Console.WriteLine("");
             Console.WriteLine(deadHead);
-            Console.ReadLine();
+            Console.ReadKey(true);
             Environment.Exit(0);
         }
 

@@ -38,6 +38,8 @@ namespace DaGame
                 Hero.Inventory.Add(ChosenItem);
                 Console.WriteLine("В твой инвентарь добавлено " + ChosenItem);
                 if (ChosenItem == "Зелье лечения") Console.WriteLine(ChosenItem + " восстанавливает " + HPPotion + "HP");
+                if (ChosenItem == "Противоядие") Console.WriteLine(ChosenItem + " выводит яд из организма");
+                if (ChosenItem == "Святая вода") Console.WriteLine(ChosenItem + " снимает эффект усталости и восстанавливает " + HPPotion + "HP");
                 else Console.WriteLine(ChosenItem + " восстанавливает " + StrongHPPotion + "HP");
                 Console.WriteLine("");
             }
@@ -141,6 +143,21 @@ namespace DaGame
                 Hero.HP += StrongHPPotion;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", сильное зелье лечения удалено из инвентаря");
+            }
+            else if (ItemName == "Противоядие")
+            {
+                Console.WriteLine(Hero.Name + " использует противоядие");
+                Hero.PoisonCounter = 0;
+                Hero.Inventory.Remove(ItemName);
+                Console.WriteLine(Hero.Name + ", противоядие удалено из инвентаря");
+            }
+            else if (ItemName == "Святая вода")
+            {
+                Console.WriteLine(Hero.Name + " использует святую воду, восстанавливает силы и " + HPPotion + "HP");
+                Hero.HP += HPPotion;
+                Hero.DebaffCounter = 0;
+                Hero.Inventory.Remove(ItemName);
+                Console.WriteLine(Hero.Name + ", святая вода удалена из инвентаря");
             }
             else if (ItemName == "Бомба")
             {

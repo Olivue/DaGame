@@ -21,12 +21,15 @@ namespace DaGame
         static string[] Hints = { "а", "н", "у", "с" };
         public static List<Action> CoolAttacks = new List<Action>() { SummonAttack, NegativeEffects, AutoHill, BossEvasion, QTE };
         public static List<DaBosss> Boss = new List<DaBosss>() { };
+
+        public static string FinalBossName = "Злоебучий Левиафан";
+        public static int FinalBossHP = 140;
         public static void Bosses()
         {
-            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 0, BossHint = Hints[0], BossImage = Wyvern });
-            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 1, BossHint = Hints[1], BossImage = Hellebore });
-            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 2, BossHint = Hints[2], BossImage = Basilisk });
-            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 50, BossHP = 50, BossAttack = 8, CoolAttackNumber = 3, BossHint = Hints[3], BossImage = Serpent });
+            Boss.Add(new DaBosss() { BossName = Names[0], BossMaxHP = 80, BossHP = 80, BossAttack = 8, CoolAttackNumber = 0, BossHint = Hints[0], BossImage = Wyvern });
+            Boss.Add(new DaBosss() { BossName = Names[1], BossMaxHP = 90, BossHP = 90, BossAttack = 12, CoolAttackNumber = 1, BossHint = Hints[1], BossImage = Hellebore });
+            Boss.Add(new DaBosss() { BossName = Names[2], BossMaxHP = 70, BossHP = 70, BossAttack = 10, CoolAttackNumber = 2, BossHint = Hints[2], BossImage = Basilisk });
+            Boss.Add(new DaBosss() { BossName = Names[3], BossMaxHP = 70, BossHP = 70, BossAttack = 8, CoolAttackNumber = 3, BossHint = Hints[3], BossImage = Serpent });
         }
         static void SummonAttack()
         {
@@ -40,7 +43,6 @@ namespace DaGame
             Console.WriteLine("Теперь перед тобой:");
             foreach (enemy enemy in enemy.enemies) Console.WriteLine(enemy.Name + " (" + enemy.HP + " здоровья)");
         }
-
         static void NegativeEffects()
         {
             Console.WriteLine("Чудовище начинает звучно сопеть и подмахивать крыльями. Дым начинает выходить из раздувающихся ноздрей. Гонимый взмахами крыльев он быстро подбирается к твоим ногам и начинает обволакивать, поднимаясь выше и выше. Ты чувствуешь слабость");
@@ -50,7 +52,6 @@ namespace DaGame
             Hero.HP -= Items.PoisonDamage;
             Console.WriteLine(Hero.Name + " получает урон ядом " + Items.PoisonDamage + " ед.");
         }
-
         static void AutoHill()
         {
             int HPExchange = random.Next(10, 19);
@@ -64,10 +65,9 @@ namespace DaGame
                 }
             }
             Console.WriteLine("Чудовище резко начинает смотреть тебе прямо в глаза. Его пасть открывается. Ты слышишь тихое шипение. Ты хочешь напасть, но не можешь отвести взгляд.");
-            Console.WriteLine("Шипение действует на тебя успокаивающее. Ты приходишь в себя и усилием воли стряхаешь с себя оцепенение, только когда чувствуешь как теряешь сознание, а жизнь будто утекает сквозь пальцы");
+            Console.WriteLine("Шипение действует на тебя успокаивающее. Ты приходишь в себя и усилием воли стряхиваешь с себя оцепенение, только когда чувствуешь как теряешь сознание, а жизнь будто утекает сквозь пальцы");
             Console.WriteLine("Монстр крадет " + HPExchange + " здоровья и восстанавливает свои силы");
         }
-
         static void BossEvasion()
         {
             Console.WriteLine("Чудовище пытается извернуться и избежать твоей атаки");
@@ -75,18 +75,25 @@ namespace DaGame
         }
         static void QTE()
         {
-
+            Console.WriteLine("У Левиафана начинается рейдж, он резко исчезает, настолько быстро он двигается. Ты не знаешь с какой стороны он появится. Ты замечаешь только обрывки теней вокруг. Надо приготовиться к внезапной атаке.");
+            Events.QTE(3);
+            if (Hero.HP < 0) return;
+            Console.WriteLine("Каким-то неведомым образом оставшись в живых, ты осматриваешься вокруг, пока снова не замечаешь мерцающие тени вокрук. Ты наготове.");
+            Events.QTE(4);
+            if (Hero.HP < 0) return;
+            Console.WriteLine("Стирая кровь с лица, ты озираешься. Враг уже не пытается скрыться. Он прямо перед тобой. Всё ближе и ближе. Ты готов.");
+            Events.QTE(5);
+            if (Hero.HP < 0) return;
+            Console.WriteLine("Ты наносишь последний удар этому исчадию. Вы оба падаете на землю, но ты без сил, а он на последнем издыхании. Подойдя к нему, ты впечатываешь его голову в землю и наблюдаешь последние конвульсии. Жестко, но действенно.");
+            Program.FinishTheGame();
         }
-
         public static void BornAnimation()
         {
             Timer timer = new Timer(1000);
             int i = 0;
             timer.Elapsed += timer_Elapsed;
             timer.Start();
-
             Console.ReadKey(true);
-
             void timer_Elapsed(object sender, ElapsedEventArgs e)
             {
                 Console.Clear();
@@ -98,11 +105,16 @@ namespace DaGame
                     timer.Close();
                     timer.Dispose();
                 }
-
                 GC.Collect();
             }
         }
-
+        public static void FinalBossBattle(int number)
+        {
+            if (enemy.enemies[number].HP < enemy.enemies[number].MaxHP * 0.75) enemy.enemies[number].SuperPower = 1;
+            if (enemy.enemies[number].HP < enemy.enemies[number].MaxHP / 2) enemy.enemies[number].SuperPower = 0;
+            if (enemy.enemies[number].HP < enemy.enemies[number].MaxHP*0.25) enemy.enemies[number].SuperPower = 3;
+            if (enemy.enemies[number].HP < enemy.enemies[number].MaxHP * 0.1) QTE();
+        }
         static string[] frame =
         {
             @"

@@ -54,7 +54,7 @@ namespace DaGame
                 enemyExp = 15;
                 enemyAttack = random.Next(8, 16);
             }
-            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp, PoisonCounter = 0, StanCounter = 0, BossChecker = false, Attack = enemyAttack, enemyLVL = level });
+            enemies.Add(new enemy() { Name = enemyName, HP = enemyHP, Exp = enemyExp, PoisonCounter = 0, StanCounter = 0, BossChecker = false, FinalBossChecker = false, Attack = enemyAttack, enemyLVL = level });
         }
 
         static public int EnemyAttack(int level, bool BossChecker, int attack)
