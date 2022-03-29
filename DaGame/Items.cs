@@ -134,6 +134,7 @@ namespace DaGame
             {
                 Console.WriteLine(Hero.Name + " использует зелье лечения и восстанавливает " + HPPotion + "HP");
                 Hero.HP += HPPotion;
+                if(Hero.HP > Hero.MaxHP) Hero.HP = Hero.MaxHP;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", зелье лечения удалено из инвентаря");
             }
@@ -141,6 +142,7 @@ namespace DaGame
             {
                 Console.WriteLine(Hero.Name + " использует сильное зелье лечения и восстанавливает " + StrongHPPotion + "HP");
                 Hero.HP += StrongHPPotion;
+                if (Hero.HP > Hero.MaxHP) Hero.HP = Hero.MaxHP;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", сильное зелье лечения удалено из инвентаря");
             }
@@ -155,6 +157,7 @@ namespace DaGame
             {
                 Console.WriteLine(Hero.Name + " использует святую воду, восстанавливает силы и " + HPPotion + "HP");
                 Hero.HP += HPPotion;
+                if (Hero.HP > Hero.MaxHP) Hero.HP = Hero.MaxHP;
                 Hero.DebaffCounter = 0;
                 Hero.Inventory.Remove(ItemName);
                 Console.WriteLine(Hero.Name + ", святая вода удалена из инвентаря");
